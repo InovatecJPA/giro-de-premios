@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RaffleEditionStatus {
+  pending
+  active
+  closed
+}
+
+enum Profiles {
+  suporte
+  owner
+  influencer
+}
+
+enum TicketRaffleStatus {
+  bought
+  available
+}
+
+enum ExtractType {
+  deposit
+  withdrawal
+}
+
+model User {
+  id              String   @id @default(uuid())
+  name            String
+  cpf             String   @unique
+  email           String   @unique
+  number          String
+  social_media    String?
+  saldo           Decimal  @default(0) @db.Money
+  hashed_password String
+  comissao        Decimal  @db.Decimal(5, 2)
+  profile         Profiles
+  owner_id        String?
+  owner           User?    @relation("UserOwnerSub", fields: [owner_id], references: [id])
+  sub_users       User[]   @relation("UserOwnerSub")
+
+  raffle_editions RaffleEdition[]
+
+  @@map("users")
+}
+
+model RaffleEdition {
+  id               String              @id @default(uuid())
+  title            String
+  description      String
+  status           RaffleEditionStatus @default(pending)
+  total_tickets    Int
+  winner_tickets   Int
+  raffle_draw_date DateTime
+  user_id          String?
+  User             User?               @relation(fields: [userId], references: [id])
+  userId           String?
+  TicketRaffle     TicketRaffle[]
+
+  @@map("raffle_editions")
+}
+
+model Prize {
+  id             String         @id @default(uuid())
+  prize_name     String
+  prize_quantity Int
+  TicketRaffle   TicketRaffle[]
+
+  @@map("prizes")
+}
+
+model TicketRaffle {
+  id                String             @id @default(uuid())
+  raffle_number     BigInt
+  status            TicketRaffleStatus @default(available)
+  prize_id          String
+  prize             Prize              @relation(fields: [prize_id], references: [id])
+  raffle_edition_id String
+  raffle_edition    RaffleEdition      @relation(fields: [raffle_edition_id], references: [id])
+  ticket_payment    TicketPayment[]    @relation("RaffleTicketPayments")
+
+  @@map("ticket_raffles")
+}
+
+model TicketPayment {
+  id            String         @id @default(uuid())
+  ticket_amount Int
+  total_value   Decimal        @db.Decimal(10, 2)
+  name          String
+  cpf           String
+  email         String
+  number        String?
+  ticket_raffle TicketRaffle[] @relation("RaffleTicketPayments")
+  Extract       Extract[]
+
+  @@map("ticket_payments")
+}
+
+model Extract {
+  id                String         @id @default(uuid())
+  amount            Decimal        @db.Decimal(10, 2)
+  type              ExtractType
+  ticket_payment_id String?
+  ticket_payment    TicketPayment? @relation(fields: [ticket_payment_id], references: [id])
+}
+
+// model PrizeRoulette {}
+// model PaymentTransaction {}
