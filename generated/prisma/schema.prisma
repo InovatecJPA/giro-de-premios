@@ -117,4 +117,4 @@ model Extract {
 }
 
 // model PrizeRoulette {}
-// model PaymentTransaction {}
+// model PaymentTransaction {}\
