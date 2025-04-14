@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:3000/users
+
+### Get all users
+GET {{baseUrl}}
+
+### Get a user by ID
+GET {{baseUrl}}/0fa135e7-7995-4b95-abfb-ed4f6d806aa8
+
+### Create a new user
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe5@example.com",
+  "cpf": "15345678902",
+  "number": "83991758296",
+  "profile": "influencer",
+  "comissao": "0.10",
+  "password": "Inova@123"
+}
+
+### Update a user using PUT
+PUT {{baseUrl}}/62dd8c42-9f4e-40e9-93c0-e52a535fb02f
+Content-Type: application/json
+
+{
+  "name": "John Doe Updated",
+  "email": "john.doe.updated@example.com"
+}
+
+### Update a user using PATCH
+PATCH {{baseUrl}}/62dd8c42-9f4e-40e9-93c0-e52a535fb02f
+Content-Type: application/json
+
+{
+  "email": "john.doe.new@example.com"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/d3b6b056-aa33-4c64-b635-060baa6177b8
+
