@@ -6,11 +6,11 @@ import { Profiles } from "@prisma/client";
 export class CreateUserDTO {
     @IsString()
     name: string;
-    
+
     @IsString()
     @Matches(/^\d{11}$/, { message: 'CPF must have exactly 11 digits' })
     cpf: string;
-    
+
     @IsEmail()
     email: string;
 

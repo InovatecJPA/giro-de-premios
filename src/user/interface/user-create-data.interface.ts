@@ -6,8 +6,8 @@ export interface UserCreateData {
     email: string;
     number: string;
     social_media?: string;
-    hashed_password: string;
     comissao: string;
-    saldo: number;
+    saldo: bigint;
     profile: Profiles;
+    hashed_password: string
 }

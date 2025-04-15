@@ -18,7 +18,7 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "number" TEXT NOT NULL,
     "social_media" TEXT,
-    "saldo" MONEY NOT NULL DEFAULT 0,
+    "saldo" BIGINT NOT NULL DEFAULT 0,
     "hashed_password" TEXT NOT NULL,
     "comissao" DECIMAL(5,2) NOT NULL,
     "profile" "Profiles" NOT NULL,
@@ -76,21 +76,21 @@ CREATE TABLE "ticket_payments" (
 );
 
 -- CreateTable
-CREATE TABLE "Extract" (
+CREATE TABLE "extracts" (
     "id" TEXT NOT NULL,
     "amount" DECIMAL(10,2) NOT NULL,
     "type" "ExtractType" NOT NULL,
     "ticket_payment_id" TEXT,
 
-    CONSTRAINT "Extract_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "extracts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "_RaffleTicketPayments" (
+CREATE TABLE "_raffle_ticket_payments" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
 
-    CONSTRAINT "_RaffleTicketPayments_AB_pkey" PRIMARY KEY ("A","B")
+    CONSTRAINT "_raffle_ticket_payments_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -100,7 +100,7 @@ CREATE UNIQUE INDEX "users_cpf_key" ON "users"("cpf");
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE INDEX "_RaffleTicketPayments_B_index" ON "_RaffleTicketPayments"("B");
+CREATE INDEX "_raffle_ticket_payments_B_index" ON "_raffle_ticket_payments"("B");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -115,10 +115,10 @@ ALTER TABLE "ticket_raffles" ADD CONSTRAINT "ticket_raffles_prize_id_fkey" FOREI
 ALTER TABLE "ticket_raffles" ADD CONSTRAINT "ticket_raffles_raffle_edition_id_fkey" FOREIGN KEY ("raffle_edition_id") REFERENCES "raffle_editions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Extract" ADD CONSTRAINT "Extract_ticket_payment_id_fkey" FOREIGN KEY ("ticket_payment_id") REFERENCES "ticket_payments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "extracts" ADD CONSTRAINT "extracts_ticket_payment_id_fkey" FOREIGN KEY ("ticket_payment_id") REFERENCES "ticket_payments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_RaffleTicketPayments" ADD CONSTRAINT "_RaffleTicketPayments_A_fkey" FOREIGN KEY ("A") REFERENCES "ticket_payments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_raffle_ticket_payments" ADD CONSTRAINT "_raffle_ticket_payments_A_fkey" FOREIGN KEY ("A") REFERENCES "ticket_payments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_RaffleTicketPayments" ADD CONSTRAINT "_RaffleTicketPayments_B_fkey" FOREIGN KEY ("B") REFERENCES "ticket_raffles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_raffle_ticket_payments" ADD CONSTRAINT "_raffle_ticket_payments_B_fkey" FOREIGN KEY ("B") REFERENCES "ticket_raffles"("id") ON DELETE CASCADE ON UPDATE CASCADE;

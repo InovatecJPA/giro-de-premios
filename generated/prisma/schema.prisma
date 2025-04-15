@@ -43,7 +43,7 @@ model User {
   email           String   @unique
   number          String
   social_media    String?
-  saldo           Decimal  @default(0) @db.Money
+  saldo           BigInt   @default(0)
   hashed_password String
   comissao        Decimal  @db.Decimal(5, 2)
   profile         Profiles
@@ -84,12 +84,13 @@ model Prize {
 model TicketRaffle {
   id                String             @id @default(uuid())
   raffle_number     BigInt
+  price             BigInt
   status            TicketRaffleStatus @default(available)
   prize_id          String
   prize             Prize              @relation(fields: [prize_id], references: [id])
   raffle_edition_id String
   raffle_edition    RaffleEdition      @relation(fields: [raffle_edition_id], references: [id])
-  ticket_payment    TicketPayment[]    @relation("RaffleTicketPayments")
+  ticket_payment    TicketPayment[]    @relation("raffle_ticket_payments")
 
   @@map("ticket_raffles")
 }
@@ -97,12 +98,12 @@ model TicketRaffle {
 model TicketPayment {
   id            String         @id @default(uuid())
   ticket_amount Int
-  total_value   Decimal        @db.Decimal(10, 2)
+  total_value   BigInt         @default(1)
   name          String
   cpf           String
   email         String
   number        String?
-  ticket_raffle TicketRaffle[] @relation("RaffleTicketPayments")
+  ticket_raffle TicketRaffle[] @relation("raffle_ticket_payments")
   Extract       Extract[]
 
   @@map("ticket_payments")
@@ -110,10 +111,12 @@ model TicketPayment {
 
 model Extract {
   id                String         @id @default(uuid())
-  amount            Decimal        @db.Decimal(10, 2)
+  amount            BigInt
   type              ExtractType
   ticket_payment_id String?
   ticket_payment    TicketPayment? @relation(fields: [ticket_payment_id], references: [id])
+
+  @@map("extracts")
 }
 
 // model PrizeRoulette {}

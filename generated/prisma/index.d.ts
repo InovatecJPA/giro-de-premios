@@ -1564,12 +1564,12 @@ export namespace Prisma {
   }
 
   export type UserAvgAggregateOutputType = {
-    saldo: Decimal | null
+    saldo: number | null
     comissao: Decimal | null
   }
 
   export type UserSumAggregateOutputType = {
-    saldo: Decimal | null
+    saldo: bigint | null
     comissao: Decimal | null
   }
 
@@ -1580,7 +1580,7 @@ export namespace Prisma {
     email: string | null
     number: string | null
     social_media: string | null
-    saldo: Decimal | null
+    saldo: bigint | null
     hashed_password: string | null
     comissao: Decimal | null
     profile: $Enums.Profiles | null
@@ -1594,7 +1594,7 @@ export namespace Prisma {
     email: string | null
     number: string | null
     social_media: string | null
-    saldo: Decimal | null
+    saldo: bigint | null
     hashed_password: string | null
     comissao: Decimal | null
     profile: $Enums.Profiles | null
@@ -1763,7 +1763,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media: string | null
-    saldo: Decimal
+    saldo: bigint
     hashed_password: string
     comissao: Decimal
     profile: $Enums.Profiles
@@ -1879,7 +1879,7 @@ export namespace Prisma {
       email: string
       number: string
       social_media: string | null
-      saldo: Prisma.Decimal
+      saldo: bigint
       hashed_password: string
       comissao: Prisma.Decimal
       profile: $Enums.Profiles
@@ -2316,7 +2316,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly number: FieldRef<"User", 'String'>
     readonly social_media: FieldRef<"User", 'String'>
-    readonly saldo: FieldRef<"User", 'Decimal'>
+    readonly saldo: FieldRef<"User", 'BigInt'>
     readonly hashed_password: FieldRef<"User", 'String'>
     readonly comissao: FieldRef<"User", 'Decimal'>
     readonly profile: FieldRef<"User", 'Profiles'>
@@ -5091,15 +5091,18 @@ export namespace Prisma {
 
   export type TicketRaffleAvgAggregateOutputType = {
     raffle_number: number | null
+    price: number | null
   }
 
   export type TicketRaffleSumAggregateOutputType = {
     raffle_number: bigint | null
+    price: bigint | null
   }
 
   export type TicketRaffleMinAggregateOutputType = {
     id: string | null
     raffle_number: bigint | null
+    price: bigint | null
     status: $Enums.TicketRaffleStatus | null
     prize_id: string | null
     raffle_edition_id: string | null
@@ -5108,6 +5111,7 @@ export namespace Prisma {
   export type TicketRaffleMaxAggregateOutputType = {
     id: string | null
     raffle_number: bigint | null
+    price: bigint | null
     status: $Enums.TicketRaffleStatus | null
     prize_id: string | null
     raffle_edition_id: string | null
@@ -5116,6 +5120,7 @@ export namespace Prisma {
   export type TicketRaffleCountAggregateOutputType = {
     id: number
     raffle_number: number
+    price: number
     status: number
     prize_id: number
     raffle_edition_id: number
@@ -5125,15 +5130,18 @@ export namespace Prisma {
 
   export type TicketRaffleAvgAggregateInputType = {
     raffle_number?: true
+    price?: true
   }
 
   export type TicketRaffleSumAggregateInputType = {
     raffle_number?: true
+    price?: true
   }
 
   export type TicketRaffleMinAggregateInputType = {
     id?: true
     raffle_number?: true
+    price?: true
     status?: true
     prize_id?: true
     raffle_edition_id?: true
@@ -5142,6 +5150,7 @@ export namespace Prisma {
   export type TicketRaffleMaxAggregateInputType = {
     id?: true
     raffle_number?: true
+    price?: true
     status?: true
     prize_id?: true
     raffle_edition_id?: true
@@ -5150,6 +5159,7 @@ export namespace Prisma {
   export type TicketRaffleCountAggregateInputType = {
     id?: true
     raffle_number?: true
+    price?: true
     status?: true
     prize_id?: true
     raffle_edition_id?: true
@@ -5245,6 +5255,7 @@ export namespace Prisma {
   export type TicketRaffleGroupByOutputType = {
     id: string
     raffle_number: bigint
+    price: bigint
     status: $Enums.TicketRaffleStatus
     prize_id: string
     raffle_edition_id: string
@@ -5272,6 +5283,7 @@ export namespace Prisma {
   export type TicketRaffleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     raffle_number?: boolean
+    price?: boolean
     status?: boolean
     prize_id?: boolean
     raffle_edition_id?: boolean
@@ -5284,6 +5296,7 @@ export namespace Prisma {
   export type TicketRaffleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     raffle_number?: boolean
+    price?: boolean
     status?: boolean
     prize_id?: boolean
     raffle_edition_id?: boolean
@@ -5294,6 +5307,7 @@ export namespace Prisma {
   export type TicketRaffleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     raffle_number?: boolean
+    price?: boolean
     status?: boolean
     prize_id?: boolean
     raffle_edition_id?: boolean
@@ -5304,12 +5318,13 @@ export namespace Prisma {
   export type TicketRaffleSelectScalar = {
     id?: boolean
     raffle_number?: boolean
+    price?: boolean
     status?: boolean
     prize_id?: boolean
     raffle_edition_id?: boolean
   }
 
-  export type TicketRaffleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "raffle_number" | "status" | "prize_id" | "raffle_edition_id", ExtArgs["result"]["ticketRaffle"]>
+  export type TicketRaffleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "raffle_number" | "price" | "status" | "prize_id" | "raffle_edition_id", ExtArgs["result"]["ticketRaffle"]>
   export type TicketRaffleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     prize?: boolean | PrizeDefaultArgs<ExtArgs>
     raffle_edition?: boolean | RaffleEditionDefaultArgs<ExtArgs>
@@ -5335,6 +5350,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       raffle_number: bigint
+      price: bigint
       status: $Enums.TicketRaffleStatus
       prize_id: string
       raffle_edition_id: string
@@ -5766,6 +5782,7 @@ export namespace Prisma {
   interface TicketRaffleFieldRefs {
     readonly id: FieldRef<"TicketRaffle", 'String'>
     readonly raffle_number: FieldRef<"TicketRaffle", 'BigInt'>
+    readonly price: FieldRef<"TicketRaffle", 'BigInt'>
     readonly status: FieldRef<"TicketRaffle", 'TicketRaffleStatus'>
     readonly prize_id: FieldRef<"TicketRaffle", 'String'>
     readonly raffle_edition_id: FieldRef<"TicketRaffle", 'String'>
@@ -6221,18 +6238,18 @@ export namespace Prisma {
 
   export type TicketPaymentAvgAggregateOutputType = {
     ticket_amount: number | null
-    total_value: Decimal | null
+    total_value: number | null
   }
 
   export type TicketPaymentSumAggregateOutputType = {
     ticket_amount: number | null
-    total_value: Decimal | null
+    total_value: bigint | null
   }
 
   export type TicketPaymentMinAggregateOutputType = {
     id: string | null
     ticket_amount: number | null
-    total_value: Decimal | null
+    total_value: bigint | null
     name: string | null
     cpf: string | null
     email: string | null
@@ -6242,7 +6259,7 @@ export namespace Prisma {
   export type TicketPaymentMaxAggregateOutputType = {
     id: string | null
     ticket_amount: number | null
-    total_value: Decimal | null
+    total_value: bigint | null
     name: string | null
     cpf: string | null
     email: string | null
@@ -6391,7 +6408,7 @@ export namespace Prisma {
   export type TicketPaymentGroupByOutputType = {
     id: string
     ticket_amount: number
-    total_value: Decimal
+    total_value: bigint
     name: string
     cpf: string
     email: string
@@ -6478,7 +6495,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       ticket_amount: number
-      total_value: Prisma.Decimal
+      total_value: bigint
       name: string
       cpf: string
       email: string
@@ -6910,7 +6927,7 @@ export namespace Prisma {
   interface TicketPaymentFieldRefs {
     readonly id: FieldRef<"TicketPayment", 'String'>
     readonly ticket_amount: FieldRef<"TicketPayment", 'Int'>
-    readonly total_value: FieldRef<"TicketPayment", 'Decimal'>
+    readonly total_value: FieldRef<"TicketPayment", 'BigInt'>
     readonly name: FieldRef<"TicketPayment", 'String'>
     readonly cpf: FieldRef<"TicketPayment", 'String'>
     readonly email: FieldRef<"TicketPayment", 'String'>
@@ -7382,23 +7399,23 @@ export namespace Prisma {
   }
 
   export type ExtractAvgAggregateOutputType = {
-    amount: Decimal | null
+    amount: number | null
   }
 
   export type ExtractSumAggregateOutputType = {
-    amount: Decimal | null
+    amount: bigint | null
   }
 
   export type ExtractMinAggregateOutputType = {
     id: string | null
-    amount: Decimal | null
+    amount: bigint | null
     type: $Enums.ExtractType | null
     ticket_payment_id: string | null
   }
 
   export type ExtractMaxAggregateOutputType = {
     id: string | null
-    amount: Decimal | null
+    amount: bigint | null
     type: $Enums.ExtractType | null
     ticket_payment_id: string | null
   }
@@ -7530,7 +7547,7 @@ export namespace Prisma {
 
   export type ExtractGroupByOutputType = {
     id: string
-    amount: Decimal
+    amount: bigint
     type: $Enums.ExtractType
     ticket_payment_id: string | null
     _count: ExtractCountAggregateOutputType | null
@@ -7603,7 +7620,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      amount: Prisma.Decimal
+      amount: bigint
       type: $Enums.ExtractType
       ticket_payment_id: string | null
     }, ExtArgs["result"]["extract"]>
@@ -8031,7 +8048,7 @@ export namespace Prisma {
    */
   interface ExtractFieldRefs {
     readonly id: FieldRef<"Extract", 'String'>
-    readonly amount: FieldRef<"Extract", 'Decimal'>
+    readonly amount: FieldRef<"Extract", 'BigInt'>
     readonly type: FieldRef<"Extract", 'ExtractType'>
     readonly ticket_payment_id: FieldRef<"Extract", 'String'>
   }
@@ -8525,6 +8542,7 @@ export namespace Prisma {
   export const TicketRaffleScalarFieldEnum: {
     id: 'id',
     raffle_number: 'raffle_number',
+    price: 'price',
     status: 'status',
     prize_id: 'prize_id',
     raffle_edition_id: 'raffle_edition_id'
@@ -8600,6 +8618,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -8670,20 +8702,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'BigInt'
-   */
-  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-    
-
-
-  /**
-   * Reference to a field of type 'BigInt[]'
-   */
-  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
-    
-
-
-  /**
    * Reference to a field of type 'TicketRaffleStatus'
    */
   export type EnumTicketRaffleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketRaffleStatus'>
@@ -8738,7 +8756,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     number?: StringFilter<"User"> | string
     social_media?: StringNullableFilter<"User"> | string | null
-    saldo?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFilter<"User"> | bigint | number
     hashed_password?: StringFilter<"User"> | string
     comissao?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFilter<"User"> | $Enums.Profiles
@@ -8775,7 +8793,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     number?: StringFilter<"User"> | string
     social_media?: StringNullableFilter<"User"> | string | null
-    saldo?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFilter<"User"> | bigint | number
     hashed_password?: StringFilter<"User"> | string
     comissao?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFilter<"User"> | $Enums.Profiles
@@ -8814,7 +8832,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     number?: StringWithAggregatesFilter<"User"> | string
     social_media?: StringNullableWithAggregatesFilter<"User"> | string | null
-    saldo?: DecimalWithAggregatesFilter<"User"> | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntWithAggregatesFilter<"User"> | bigint | number
     hashed_password?: StringWithAggregatesFilter<"User"> | string
     comissao?: DecimalWithAggregatesFilter<"User"> | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesWithAggregatesFilter<"User"> | $Enums.Profiles
@@ -8954,6 +8972,7 @@ export namespace Prisma {
     NOT?: TicketRaffleWhereInput | TicketRaffleWhereInput[]
     id?: StringFilter<"TicketRaffle"> | string
     raffle_number?: BigIntFilter<"TicketRaffle"> | bigint | number
+    price?: BigIntFilter<"TicketRaffle"> | bigint | number
     status?: EnumTicketRaffleStatusFilter<"TicketRaffle"> | $Enums.TicketRaffleStatus
     prize_id?: StringFilter<"TicketRaffle"> | string
     raffle_edition_id?: StringFilter<"TicketRaffle"> | string
@@ -8965,6 +8984,7 @@ export namespace Prisma {
   export type TicketRaffleOrderByWithRelationInput = {
     id?: SortOrder
     raffle_number?: SortOrder
+    price?: SortOrder
     status?: SortOrder
     prize_id?: SortOrder
     raffle_edition_id?: SortOrder
@@ -8979,6 +8999,7 @@ export namespace Prisma {
     OR?: TicketRaffleWhereInput[]
     NOT?: TicketRaffleWhereInput | TicketRaffleWhereInput[]
     raffle_number?: BigIntFilter<"TicketRaffle"> | bigint | number
+    price?: BigIntFilter<"TicketRaffle"> | bigint | number
     status?: EnumTicketRaffleStatusFilter<"TicketRaffle"> | $Enums.TicketRaffleStatus
     prize_id?: StringFilter<"TicketRaffle"> | string
     raffle_edition_id?: StringFilter<"TicketRaffle"> | string
@@ -8990,6 +9011,7 @@ export namespace Prisma {
   export type TicketRaffleOrderByWithAggregationInput = {
     id?: SortOrder
     raffle_number?: SortOrder
+    price?: SortOrder
     status?: SortOrder
     prize_id?: SortOrder
     raffle_edition_id?: SortOrder
@@ -9006,6 +9028,7 @@ export namespace Prisma {
     NOT?: TicketRaffleScalarWhereWithAggregatesInput | TicketRaffleScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"TicketRaffle"> | string
     raffle_number?: BigIntWithAggregatesFilter<"TicketRaffle"> | bigint | number
+    price?: BigIntWithAggregatesFilter<"TicketRaffle"> | bigint | number
     status?: EnumTicketRaffleStatusWithAggregatesFilter<"TicketRaffle"> | $Enums.TicketRaffleStatus
     prize_id?: StringWithAggregatesFilter<"TicketRaffle"> | string
     raffle_edition_id?: StringWithAggregatesFilter<"TicketRaffle"> | string
@@ -9017,7 +9040,7 @@ export namespace Prisma {
     NOT?: TicketPaymentWhereInput | TicketPaymentWhereInput[]
     id?: StringFilter<"TicketPayment"> | string
     ticket_amount?: IntFilter<"TicketPayment"> | number
-    total_value?: DecimalFilter<"TicketPayment"> | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFilter<"TicketPayment"> | bigint | number
     name?: StringFilter<"TicketPayment"> | string
     cpf?: StringFilter<"TicketPayment"> | string
     email?: StringFilter<"TicketPayment"> | string
@@ -9044,7 +9067,7 @@ export namespace Prisma {
     OR?: TicketPaymentWhereInput[]
     NOT?: TicketPaymentWhereInput | TicketPaymentWhereInput[]
     ticket_amount?: IntFilter<"TicketPayment"> | number
-    total_value?: DecimalFilter<"TicketPayment"> | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFilter<"TicketPayment"> | bigint | number
     name?: StringFilter<"TicketPayment"> | string
     cpf?: StringFilter<"TicketPayment"> | string
     email?: StringFilter<"TicketPayment"> | string
@@ -9074,7 +9097,7 @@ export namespace Prisma {
     NOT?: TicketPaymentScalarWhereWithAggregatesInput | TicketPaymentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"TicketPayment"> | string
     ticket_amount?: IntWithAggregatesFilter<"TicketPayment"> | number
-    total_value?: DecimalWithAggregatesFilter<"TicketPayment"> | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntWithAggregatesFilter<"TicketPayment"> | bigint | number
     name?: StringWithAggregatesFilter<"TicketPayment"> | string
     cpf?: StringWithAggregatesFilter<"TicketPayment"> | string
     email?: StringWithAggregatesFilter<"TicketPayment"> | string
@@ -9086,7 +9109,7 @@ export namespace Prisma {
     OR?: ExtractWhereInput[]
     NOT?: ExtractWhereInput | ExtractWhereInput[]
     id?: StringFilter<"Extract"> | string
-    amount?: DecimalFilter<"Extract"> | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFilter<"Extract"> | bigint | number
     type?: EnumExtractTypeFilter<"Extract"> | $Enums.ExtractType
     ticket_payment_id?: StringNullableFilter<"Extract"> | string | null
     ticket_payment?: XOR<TicketPaymentNullableScalarRelationFilter, TicketPaymentWhereInput> | null
@@ -9105,7 +9128,7 @@ export namespace Prisma {
     AND?: ExtractWhereInput | ExtractWhereInput[]
     OR?: ExtractWhereInput[]
     NOT?: ExtractWhereInput | ExtractWhereInput[]
-    amount?: DecimalFilter<"Extract"> | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFilter<"Extract"> | bigint | number
     type?: EnumExtractTypeFilter<"Extract"> | $Enums.ExtractType
     ticket_payment_id?: StringNullableFilter<"Extract"> | string | null
     ticket_payment?: XOR<TicketPaymentNullableScalarRelationFilter, TicketPaymentWhereInput> | null
@@ -9128,7 +9151,7 @@ export namespace Prisma {
     OR?: ExtractScalarWhereWithAggregatesInput[]
     NOT?: ExtractScalarWhereWithAggregatesInput | ExtractScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Extract"> | string
-    amount?: DecimalWithAggregatesFilter<"Extract"> | Decimal | DecimalJsLike | number | string
+    amount?: BigIntWithAggregatesFilter<"Extract"> | bigint | number
     type?: EnumExtractTypeWithAggregatesFilter<"Extract"> | $Enums.ExtractType
     ticket_payment_id?: StringNullableWithAggregatesFilter<"Extract"> | string | null
   }
@@ -9140,7 +9163,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -9156,7 +9179,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -9172,7 +9195,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -9188,7 +9211,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -9204,7 +9227,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -9218,7 +9241,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -9231,7 +9254,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -9374,6 +9397,7 @@ export namespace Prisma {
   export type TicketRaffleCreateInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize: PrizeCreateNestedOneWithoutTicketRaffleInput
     raffle_edition: RaffleEditionCreateNestedOneWithoutTicketRaffleInput
@@ -9383,6 +9407,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedCreateInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize_id: string
     raffle_edition_id: string
@@ -9392,6 +9417,7 @@ export namespace Prisma {
   export type TicketRaffleUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize?: PrizeUpdateOneRequiredWithoutTicketRaffleNestedInput
     raffle_edition?: RaffleEditionUpdateOneRequiredWithoutTicketRaffleNestedInput
@@ -9401,6 +9427,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize_id?: StringFieldUpdateOperationsInput | string
     raffle_edition_id?: StringFieldUpdateOperationsInput | string
@@ -9410,6 +9437,7 @@ export namespace Prisma {
   export type TicketRaffleCreateManyInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize_id: string
     raffle_edition_id: string
@@ -9418,12 +9446,14 @@ export namespace Prisma {
   export type TicketRaffleUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
   }
 
   export type TicketRaffleUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize_id?: StringFieldUpdateOperationsInput | string
     raffle_edition_id?: StringFieldUpdateOperationsInput | string
@@ -9432,7 +9462,7 @@ export namespace Prisma {
   export type TicketPaymentCreateInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -9444,7 +9474,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedCreateInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -9456,7 +9486,7 @@ export namespace Prisma {
   export type TicketPaymentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -9468,7 +9498,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -9480,7 +9510,7 @@ export namespace Prisma {
   export type TicketPaymentCreateManyInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -9490,7 +9520,7 @@ export namespace Prisma {
   export type TicketPaymentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -9500,7 +9530,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -9509,48 +9539,48 @@ export namespace Prisma {
 
   export type ExtractCreateInput = {
     id?: string
-    amount: Decimal | DecimalJsLike | number | string
+    amount: bigint | number
     type: $Enums.ExtractType
     ticket_payment?: TicketPaymentCreateNestedOneWithoutExtractInput
   }
 
   export type ExtractUncheckedCreateInput = {
     id?: string
-    amount: Decimal | DecimalJsLike | number | string
+    amount: bigint | number
     type: $Enums.ExtractType
     ticket_payment_id?: string | null
   }
 
   export type ExtractUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
     ticket_payment?: TicketPaymentUpdateOneWithoutExtractNestedInput
   }
 
   export type ExtractUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
     ticket_payment_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ExtractCreateManyInput = {
     id?: string
-    amount: Decimal | DecimalJsLike | number | string
+    amount: bigint | number
     type: $Enums.ExtractType
     ticket_payment_id?: string | null
   }
 
   export type ExtractUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
   }
 
   export type ExtractUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
     ticket_payment_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -9583,6 +9613,17 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -9719,6 +9760,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -9898,17 +9955,6 @@ export namespace Prisma {
     prize_quantity?: SortOrder
   }
 
-  export type BigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
-  }
-
   export type EnumTicketRaffleStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TicketRaffleStatus | EnumTicketRaffleStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TicketRaffleStatus[] | ListEnumTicketRaffleStatusFieldRefInput<$PrismaModel>
@@ -9939,6 +9985,7 @@ export namespace Prisma {
   export type TicketRaffleCountOrderByAggregateInput = {
     id?: SortOrder
     raffle_number?: SortOrder
+    price?: SortOrder
     status?: SortOrder
     prize_id?: SortOrder
     raffle_edition_id?: SortOrder
@@ -9946,11 +9993,13 @@ export namespace Prisma {
 
   export type TicketRaffleAvgOrderByAggregateInput = {
     raffle_number?: SortOrder
+    price?: SortOrder
   }
 
   export type TicketRaffleMaxOrderByAggregateInput = {
     id?: SortOrder
     raffle_number?: SortOrder
+    price?: SortOrder
     status?: SortOrder
     prize_id?: SortOrder
     raffle_edition_id?: SortOrder
@@ -9959,6 +10008,7 @@ export namespace Prisma {
   export type TicketRaffleMinOrderByAggregateInput = {
     id?: SortOrder
     raffle_number?: SortOrder
+    price?: SortOrder
     status?: SortOrder
     prize_id?: SortOrder
     raffle_edition_id?: SortOrder
@@ -9966,22 +10016,7 @@ export namespace Prisma {
 
   export type TicketRaffleSumOrderByAggregateInput = {
     raffle_number?: SortOrder
-  }
-
-  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
+    price?: SortOrder
   }
 
   export type EnumTicketRaffleStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10135,6 +10170,14 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -10355,14 +10398,6 @@ export namespace Prisma {
     connect?: TicketPaymentWhereUniqueInput | TicketPaymentWhereUniqueInput[]
   }
 
-  export type BigIntFieldUpdateOperationsInput = {
-    set?: bigint | number
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
-  }
-
   export type EnumTicketRaffleStatusFieldUpdateOperationsInput = {
     set?: $Enums.TicketRaffleStatus
   }
@@ -10537,6 +10572,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -10611,6 +10657,33 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -10681,17 +10754,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -10706,38 +10768,11 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedBigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
-  }
-
   export type NestedEnumTicketRaffleStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TicketRaffleStatus | EnumTicketRaffleStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TicketRaffleStatus[] | ListEnumTicketRaffleStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.TicketRaffleStatus[] | ListEnumTicketRaffleStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumTicketRaffleStatusFilter<$PrismaModel> | $Enums.TicketRaffleStatus
-  }
-
-  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type NestedEnumTicketRaffleStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10774,7 +10809,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -10789,7 +10824,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -10809,7 +10844,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -10824,7 +10859,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -10894,7 +10929,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -10909,7 +10944,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -10943,7 +10978,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     number?: StringFilter<"User"> | string
     social_media?: StringNullableFilter<"User"> | string | null
-    saldo?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFilter<"User"> | bigint | number
     hashed_password?: StringFilter<"User"> | string
     comissao?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFilter<"User"> | $Enums.Profiles
@@ -10988,7 +11023,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -11003,7 +11038,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -11019,6 +11054,7 @@ export namespace Prisma {
   export type TicketRaffleCreateWithoutRaffle_editionInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize: PrizeCreateNestedOneWithoutTicketRaffleInput
     ticket_payment?: TicketPaymentCreateNestedManyWithoutTicket_raffleInput
@@ -11027,6 +11063,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedCreateWithoutRaffle_editionInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize_id: string
     ticket_payment?: TicketPaymentUncheckedCreateNestedManyWithoutTicket_raffleInput
@@ -11060,7 +11097,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -11075,7 +11112,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -11105,6 +11142,7 @@ export namespace Prisma {
     NOT?: TicketRaffleScalarWhereInput | TicketRaffleScalarWhereInput[]
     id?: StringFilter<"TicketRaffle"> | string
     raffle_number?: BigIntFilter<"TicketRaffle"> | bigint | number
+    price?: BigIntFilter<"TicketRaffle"> | bigint | number
     status?: EnumTicketRaffleStatusFilter<"TicketRaffle"> | $Enums.TicketRaffleStatus
     prize_id?: StringFilter<"TicketRaffle"> | string
     raffle_edition_id?: StringFilter<"TicketRaffle"> | string
@@ -11113,6 +11151,7 @@ export namespace Prisma {
   export type TicketRaffleCreateWithoutPrizeInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     raffle_edition: RaffleEditionCreateNestedOneWithoutTicketRaffleInput
     ticket_payment?: TicketPaymentCreateNestedManyWithoutTicket_raffleInput
@@ -11121,6 +11160,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedCreateWithoutPrizeInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     raffle_edition_id: string
     ticket_payment?: TicketPaymentUncheckedCreateNestedManyWithoutTicket_raffleInput
@@ -11201,7 +11241,7 @@ export namespace Prisma {
   export type TicketPaymentCreateWithoutTicket_raffleInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -11212,7 +11252,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedCreateWithoutTicket_raffleInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -11305,7 +11345,7 @@ export namespace Prisma {
     NOT?: TicketPaymentScalarWhereInput | TicketPaymentScalarWhereInput[]
     id?: StringFilter<"TicketPayment"> | string
     ticket_amount?: IntFilter<"TicketPayment"> | number
-    total_value?: DecimalFilter<"TicketPayment"> | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFilter<"TicketPayment"> | bigint | number
     name?: StringFilter<"TicketPayment"> | string
     cpf?: StringFilter<"TicketPayment"> | string
     email?: StringFilter<"TicketPayment"> | string
@@ -11315,6 +11355,7 @@ export namespace Prisma {
   export type TicketRaffleCreateWithoutTicket_paymentInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize: PrizeCreateNestedOneWithoutTicketRaffleInput
     raffle_edition: RaffleEditionCreateNestedOneWithoutTicketRaffleInput
@@ -11323,6 +11364,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedCreateWithoutTicket_paymentInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize_id: string
     raffle_edition_id: string
@@ -11335,13 +11377,13 @@ export namespace Prisma {
 
   export type ExtractCreateWithoutTicket_paymentInput = {
     id?: string
-    amount: Decimal | DecimalJsLike | number | string
+    amount: bigint | number
     type: $Enums.ExtractType
   }
 
   export type ExtractUncheckedCreateWithoutTicket_paymentInput = {
     id?: string
-    amount: Decimal | DecimalJsLike | number | string
+    amount: bigint | number
     type: $Enums.ExtractType
   }
 
@@ -11392,7 +11434,7 @@ export namespace Prisma {
     OR?: ExtractScalarWhereInput[]
     NOT?: ExtractScalarWhereInput | ExtractScalarWhereInput[]
     id?: StringFilter<"Extract"> | string
-    amount?: DecimalFilter<"Extract"> | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFilter<"Extract"> | bigint | number
     type?: EnumExtractTypeFilter<"Extract"> | $Enums.ExtractType
     ticket_payment_id?: StringNullableFilter<"Extract"> | string | null
   }
@@ -11400,7 +11442,7 @@ export namespace Prisma {
   export type TicketPaymentCreateWithoutExtractInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -11411,7 +11453,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedCreateWithoutExtractInput = {
     id?: string
     ticket_amount: number
-    total_value: Decimal | DecimalJsLike | number | string
+    total_value?: bigint | number
     name: string
     cpf: string
     email: string
@@ -11438,7 +11480,7 @@ export namespace Prisma {
   export type TicketPaymentUpdateWithoutExtractInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -11449,7 +11491,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedUpdateWithoutExtractInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -11464,7 +11506,7 @@ export namespace Prisma {
     email: string
     number: string
     social_media?: string | null
-    saldo?: Decimal | DecimalJsLike | number | string
+    saldo?: bigint | number
     hashed_password: string
     comissao: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
@@ -11488,7 +11530,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -11503,7 +11545,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -11518,7 +11560,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     number?: StringFieldUpdateOperationsInput | string
     social_media?: NullableStringFieldUpdateOperationsInput | string | null
-    saldo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldo?: BigIntFieldUpdateOperationsInput | bigint | number
     hashed_password?: StringFieldUpdateOperationsInput | string
     comissao?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     profile?: EnumProfilesFieldUpdateOperationsInput | $Enums.Profiles
@@ -11562,6 +11604,7 @@ export namespace Prisma {
   export type TicketRaffleCreateManyRaffle_editionInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     prize_id: string
   }
@@ -11569,6 +11612,7 @@ export namespace Prisma {
   export type TicketRaffleUpdateWithoutRaffle_editionInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize?: PrizeUpdateOneRequiredWithoutTicketRaffleNestedInput
     ticket_payment?: TicketPaymentUpdateManyWithoutTicket_raffleNestedInput
@@ -11577,6 +11621,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateWithoutRaffle_editionInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize_id?: StringFieldUpdateOperationsInput | string
     ticket_payment?: TicketPaymentUncheckedUpdateManyWithoutTicket_raffleNestedInput
@@ -11585,6 +11630,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateManyWithoutRaffle_editionInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize_id?: StringFieldUpdateOperationsInput | string
   }
@@ -11592,6 +11638,7 @@ export namespace Prisma {
   export type TicketRaffleCreateManyPrizeInput = {
     id?: string
     raffle_number: bigint | number
+    price: bigint | number
     status?: $Enums.TicketRaffleStatus
     raffle_edition_id: string
   }
@@ -11599,6 +11646,7 @@ export namespace Prisma {
   export type TicketRaffleUpdateWithoutPrizeInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     raffle_edition?: RaffleEditionUpdateOneRequiredWithoutTicketRaffleNestedInput
     ticket_payment?: TicketPaymentUpdateManyWithoutTicket_raffleNestedInput
@@ -11607,6 +11655,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateWithoutPrizeInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     raffle_edition_id?: StringFieldUpdateOperationsInput | string
     ticket_payment?: TicketPaymentUncheckedUpdateManyWithoutTicket_raffleNestedInput
@@ -11615,6 +11664,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateManyWithoutPrizeInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     raffle_edition_id?: StringFieldUpdateOperationsInput | string
   }
@@ -11622,7 +11672,7 @@ export namespace Prisma {
   export type TicketPaymentUpdateWithoutTicket_raffleInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -11633,7 +11683,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedUpdateWithoutTicket_raffleInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -11644,7 +11694,7 @@ export namespace Prisma {
   export type TicketPaymentUncheckedUpdateManyWithoutTicket_raffleInput = {
     id?: StringFieldUpdateOperationsInput | string
     ticket_amount?: IntFieldUpdateOperationsInput | number
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total_value?: BigIntFieldUpdateOperationsInput | bigint | number
     name?: StringFieldUpdateOperationsInput | string
     cpf?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -11653,13 +11703,14 @@ export namespace Prisma {
 
   export type ExtractCreateManyTicket_paymentInput = {
     id?: string
-    amount: Decimal | DecimalJsLike | number | string
+    amount: bigint | number
     type: $Enums.ExtractType
   }
 
   export type TicketRaffleUpdateWithoutTicket_paymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize?: PrizeUpdateOneRequiredWithoutTicketRaffleNestedInput
     raffle_edition?: RaffleEditionUpdateOneRequiredWithoutTicketRaffleNestedInput
@@ -11668,6 +11719,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateWithoutTicket_paymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize_id?: StringFieldUpdateOperationsInput | string
     raffle_edition_id?: StringFieldUpdateOperationsInput | string
@@ -11676,6 +11728,7 @@ export namespace Prisma {
   export type TicketRaffleUncheckedUpdateManyWithoutTicket_paymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     raffle_number?: BigIntFieldUpdateOperationsInput | bigint | number
+    price?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumTicketRaffleStatusFieldUpdateOperationsInput | $Enums.TicketRaffleStatus
     prize_id?: StringFieldUpdateOperationsInput | string
     raffle_edition_id?: StringFieldUpdateOperationsInput | string
@@ -11683,19 +11736,19 @@ export namespace Prisma {
 
   export type ExtractUpdateWithoutTicket_paymentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
   }
 
   export type ExtractUncheckedUpdateWithoutTicket_paymentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
   }
 
   export type ExtractUncheckedUpdateManyWithoutTicket_paymentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    amount?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumExtractTypeFieldUpdateOperationsInput | $Enums.ExtractType
   }
 

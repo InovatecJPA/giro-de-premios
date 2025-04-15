@@ -152,6 +152,7 @@ exports.Prisma.PrizeScalarFieldEnum = {
 exports.Prisma.TicketRaffleScalarFieldEnum = {
   id: 'id',
   raffle_number: 'raffle_number',
+  price: 'price',
   status: 'status',
   prize_id: 'prize_id',
   raffle_edition_id: 'raffle_edition_id'

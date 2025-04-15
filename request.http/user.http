@@ -12,11 +12,11 @@ Content-Type: application/json
 
 {
   "name": "John Doe",
-  "email": "john.doe5@example.com",
-  "cpf": "15345678902",
-  "number": "83991758296",
+  "email": "j213o2112113289h5323n2925332252.doe@example.com",
+  "cpf": "19110299113",
+  "number": "83999958296",
   "profile": "influencer",
-  "comissao": "0.10",
+  "comissao": "0.50",
   "password": "Inova@123"
 }
 
