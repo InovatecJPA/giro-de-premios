@@ -45,7 +45,7 @@ model User {
   social_media    String?
   saldo           BigInt   @default(0)
   hashed_password String
-  comissao        Decimal  @db.Decimal(5, 2)
+  comissao        Decimal  @default(0) @db.Decimal(5, 2)
   profile         Profiles
   owner_id        String?
   owner           User?    @relation("UserOwnerSub", fields: [owner_id], references: [id])
