@@ -9165,7 +9165,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner?: UserCreateNestedOneWithoutSub_usersInput
     sub_users?: UserCreateNestedManyWithoutOwnerInput
@@ -9181,7 +9181,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner_id?: string | null
     sub_users?: UserUncheckedCreateNestedManyWithoutOwnerInput
@@ -9229,7 +9229,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner_id?: string | null
   }
@@ -10811,7 +10811,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner?: UserCreateNestedOneWithoutSub_usersInput
     raffle_editions?: RaffleEditionCreateNestedManyWithoutUserInput
@@ -10826,7 +10826,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner_id?: string | null
     raffle_editions?: RaffleEditionUncheckedCreateNestedManyWithoutUserInput
@@ -10846,7 +10846,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     sub_users?: UserCreateNestedManyWithoutOwnerInput
     raffle_editions?: RaffleEditionCreateNestedManyWithoutUserInput
@@ -10861,7 +10861,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     sub_users?: UserUncheckedCreateNestedManyWithoutOwnerInput
     raffle_editions?: RaffleEditionUncheckedCreateNestedManyWithoutUserInput
@@ -11025,7 +11025,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner?: UserCreateNestedOneWithoutSub_usersInput
     sub_users?: UserCreateNestedManyWithoutOwnerInput
@@ -11040,7 +11040,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
     owner_id?: string | null
     sub_users?: UserUncheckedCreateNestedManyWithoutOwnerInput
@@ -11508,7 +11508,7 @@ export namespace Prisma {
     social_media?: string | null
     saldo?: bigint | number
     hashed_password: string
-    comissao: Decimal | DecimalJsLike | number | string
+    comissao?: Decimal | DecimalJsLike | number | string
     profile: $Enums.Profiles
   }
 
