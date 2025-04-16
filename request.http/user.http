@@ -12,8 +12,8 @@ Content-Type: application/json
 
 {
   "name": "John Doe",
-  "email": "j213o2112113289h5323n2925332252.doe@example.com",
-  "cpf": "19110299113",
+  "email": "d1e221@example.com",
+  "cpf": "10321329113",
   "number": "83999958296",
   "profile": "influencer",
   "comissao": "0.50",
