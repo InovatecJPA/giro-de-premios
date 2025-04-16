@@ -1,13 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ResponseUserDTO } from './dto/response-user.dto';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { PutUpdateUser } from './dto/put-update-user.dto';
-import { UserCreateData } from './interface/user-create-data.interface';
-import bcrypt from 'bcryptjs'
+
 import { plainToInstance } from 'class-transformer';
-import { Decimal } from '@prisma/client/runtime/library';
 
 @Controller('users')
 export default class UserController {
@@ -20,7 +18,7 @@ export default class UserController {
       const users = await this.userService.findAll(skip, take);
       return { data: users }
     } catch (error) {
-      console.log(error);
+      throw error
     }
   }
 
@@ -31,7 +29,7 @@ export default class UserController {
 
       return { data: user }
     } catch (error) {
-      console.log(error);
+      throw error
     }
   }
 
@@ -46,7 +44,6 @@ export default class UserController {
 
       return { data: { userResponse } }
     } catch (error) {
-      console.log(error);
       throw error
     }
   }
@@ -58,11 +55,14 @@ export default class UserController {
 
       const user = await this.userService.update(id, data);
 
-      const userResponse = plainToInstance(ResponseUserDTO, user);
+      const userResponse = plainToInstance(ResponseUserDTO, {
+        ...user,
+        comissao: user.comissao.toString()
+      });
 
       return { data: { userResponse } }
     } catch (error) {
-      console.log(error);
+      throw error
     }
   }
 
@@ -71,21 +71,25 @@ export default class UserController {
     try {
       const user = await this.userService.update(id, data);
 
-      const userResponse = plainToInstance(ResponseUserDTO, user);
+      const userResponse = plainToInstance(ResponseUserDTO, {
+        ...user,
+        comissao: user.comissao.toString(),
+      });
 
       return { data: { userResponse } }
     } catch (error) {
-      console.log(error);
+      throw error
     }
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async delete(@Param('id') id: string): Promise<any> {
     try {
       if (await this.userService.delete(id))
         return { data: "Usuario deletado com sucesso" };
     } catch (error) {
-      console.log(error);
+      throw error
     }
   }
 }

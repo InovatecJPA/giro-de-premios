@@ -1,6 +1,9 @@
 import { Exclude, Transform } from "class-transformer";
-import { IsOptional, IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsUUID, Matches } from "class-validator";
+import { IsOptional, IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsUUID, Matches, IsDecimal } from "class-validator";
 import { Profiles } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
+import { constrainedMemory } from "process";
+import { validateHeaderValue } from "http";
 
 
 export class CreateUserDTO {
@@ -22,7 +25,6 @@ export class CreateUserDTO {
     @Matches(/(?:https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/)
     social_media?: string;
 
-    @Exclude({ toPlainOnly: true })
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -34,7 +36,13 @@ export class CreateUserDTO {
     })
     password: string;
 
-    @Matches(/^\d*\.\d{1,2}$/, { message: 'Commission must be in format 0.00 with up to 2 decimal places' })
+    @IsOptional()
+    @Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            return "0.00";
+        }
+        return value.toString();
+    })
     comissao: string;
 
     @IsEnum(Profiles)

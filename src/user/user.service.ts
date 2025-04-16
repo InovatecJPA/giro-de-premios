@@ -80,15 +80,16 @@ export class UserService {
 
   async create(dataUser: CreateUserDTO) {
     const { password, ...dataWithoutPassword } = dataUser;
-    if (await this.findByEmail(dataUser.email))
+
+    if (await this.findByEmail(dataWithoutPassword.email))
       throw new ConflictException("Email já cadastrado");
 
-    if (await this.findByCpf(dataUser.cpf))
+    if (await this.findByCpf(dataWithoutPassword.cpf))
       throw new ConflictException("Cpf já cadastrado");
 
     const data: UserCreateData = {
       ...dataWithoutPassword,
-      hashed_password: await bcrypt.hash(dataUser.password, 10),
+      hashed_password: await bcrypt.hash(password, 10),
       saldo: 0n
     }
 
@@ -96,7 +97,6 @@ export class UserService {
       data,
     });
 
-    console.log(user);
     return user;
   }
 
@@ -124,6 +124,9 @@ export class UserService {
         id,
       },
     });
+
+    if (!user)
+      throw new Error("Erro ao deletar usuario");
 
     return user;
   }

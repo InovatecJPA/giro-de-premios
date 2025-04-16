@@ -1,5 +1,4 @@
 import { Exclude, Expose, Transform } from "class-transformer";
-import { IsDecimal } from "class-validator";
 import { IsBigInt } from "../../decorator/bigint-validator.decorator";
 import { Decimal } from "@prisma/client/runtime/library";
 import { Profiles } from "@prisma/client";
