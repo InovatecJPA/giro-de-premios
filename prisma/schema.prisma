@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../src/prisma/generated/prisma/client"
 }
 
 datasource db {
@@ -37,23 +37,49 @@ enum ExtractType {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  name            String
-  cpf             String   @unique
-  email           String   @unique
-  number          String
-  social_media    String?
-  saldo           BigInt   @default(0)
-  hashed_password String
-  comissao        Decimal  @default(0) @db.Decimal(5, 2)
-  profile         Profiles
-  owner_id        String?
-  owner           User?    @relation("UserOwnerSub", fields: [owner_id], references: [id])
-  sub_users       User[]   @relation("UserOwnerSub")
+  id           String   @id @default(uuid())
+  name         String
+  cpf          String   @unique
+  number       String
+  social_media String?
+  saldo        BigInt   @default(0)
+  comissao     Decimal  @default(0) @db.Decimal(5, 2)
+  profile      Profiles
+  owner_id     String?
+  owner        User?    @relation("UserOwnerSub", fields: [owner_id], references: [id])
+  sub_users    User[]   @relation("UserOwnerSub")
 
+  auths           Auth[]
   raffle_editions RaffleEdition[]
 
   @@map("users")
+}
+
+model Auth {
+  id               String   @id @default(uuid())
+  provider         String //Email, Facebook, Google
+  password_hash    String?
+  provider_user_id String   @unique //Email is saved here when provider = "email"
+  is_verified      Boolean  @default(false)
+  user_id          String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now())
+
+  User                User                  @relation(fields: [user_id], references: [id])
+  ForgotPasswordToken ForgotPasswordToken[]
+
+  @@map("auths")
+}
+
+model ForgotPasswordToken {
+  id                           String   @id @default(uuid())
+  auth_id                      String
+  password_reset_token         String
+  password_reset_token_expires DateTime
+
+  authId Auth @relation(fields: [auth_id], references: [id])
+
+  @@map("forgot_password_tokens")
 }
 
 model RaffleEdition {
