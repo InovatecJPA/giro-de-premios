@@ -1,19 +1,24 @@
-import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, ValidateIf } from 'class-validator';
 
-@Exclude()
 export class AuthLoginDto {
-  @Expose()
-  @IsEmail()
-  email: string;
+  @IsString()
+  @IsNotEmpty()
+  provider: string;
 
-  @Expose()
+  @IsString()
+  @IsNotEmpty()
+  @ValidateIf(obj => obj.provider === 'email')
+  @IsEmail()
+  provider_user_id: string;
+
+
+  @ValidateIf(obj => obj.provider === 'email')
   @IsStrongPassword({
-    minLength: 4,
-    minLowercase: 0,
-    minUppercase: 0,
-    minNumbers: 0,
-    minSymbols: 0,
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
   })
   password: string;
 }

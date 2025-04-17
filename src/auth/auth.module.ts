@@ -4,18 +4,27 @@ import UserModule from "../user/user.module";
 import { PrismaModule } from "../prisma/prisma.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthGuard } from "./auth.guard";
 
 @Module({
     imports: [
         JwtModule.register({
+            global: true,
             secret: process.env.JWT_SECRET || 'secret',
             signOptions: { expiresIn: '1d', algorithm: 'HS256' }
         }),
         UserModule,
         PrismaModule,
     ],
-    providers: [AuthService],
+    providers: [
+        AuthService,
+        {
+            provide: APP_GUARD,
+            useClass: AuthGuard
+        }
+    ],
     controllers: [AuthController],
-    exports: [JwtModule]
+    exports: [AuthService]
 })
 export class AuthModule { }
