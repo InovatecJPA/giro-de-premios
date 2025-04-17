@@ -15,9 +15,6 @@ export class ResponseUserDTO {
   cpf: string;
 
   @Expose()
-  email: string;
-
-  @Expose()
   number: string;
 
   @Expose()
@@ -37,5 +34,4 @@ export class ResponseUserDTO {
   @Expose()
   owner_id: string | null;
 
-  hashed_password: string;
 }

@@ -6,16 +6,26 @@ import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { PutUpdateUser } from './dto/put-update-user.dto';
 
 import { plainToInstance } from 'class-transformer';
+import { AuthService } from '../auth/auth.service';
+import { IsPublic } from '../decorator/is-public-validator.decorator';
 
 @Controller('users')
 export default class UserController {
   constructor(
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly authService: AuthService
   ) { }
+
   @Get()
   async findAll(@Query('skip') skip = 1, @Query('take') take = 10): Promise<any> {
     try {
-      const users = await this.userService.findAll(skip, take);
+
+      const pagination = {
+        skip,
+        take
+      }
+
+      const users = await this.userService.findAll(pagination);
       return { data: users }
     } catch (error) {
       throw error
@@ -33,10 +43,23 @@ export default class UserController {
     }
   }
 
+  @IsPublic()
   @Post()
   async create(@Body() data: CreateUserDTO): Promise<any> {
     try {
       const user = await this.userService.create(data);
+
+      const credentialsPayload = {
+        ...data.credentials,
+        user_id: user.id
+      }
+
+      if (data.credentials.provider === "email") {
+        await this.authService.registerLocal(credentialsPayload);
+      } else {
+        await this.authService.registerSocial(credentialsPayload);
+      }
+
       const userResponse = plainToInstance(ResponseUserDTO, {
         ...user,
         comissao: user.comissao.toString()

@@ -1,9 +1,8 @@
-import { Exclude, Transform } from "class-transformer";
-import { IsOptional, IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsUUID, Matches, IsDecimal } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsOptional, IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsUUID, Matches, IsDecimal, ValidateNested } from "class-validator";
 import { Profiles } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/library";
-import { constrainedMemory } from "process";
-import { validateHeaderValue } from "http";
+import { AuthRegisterDto } from "../../auth/dto/auth-register.dto";
+
 
 
 export class CreateUserDTO {
@@ -14,8 +13,6 @@ export class CreateUserDTO {
     @Matches(/^\d{11}$/, { message: 'CPF must have exactly 11 digits' })
     cpf: string;
 
-    @IsEmail()
-    email: string;
 
     @IsPhoneNumber('BR', { message: 'Telefone Invalido' })
     number: string;
@@ -24,17 +21,6 @@ export class CreateUserDTO {
     @IsOptional()
     @Matches(/(?:https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/)
     social_media?: string;
-
-    @IsStrongPassword({
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1
-    }, {
-        message: 'A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um símbolo'
-    })
-    password: string;
 
     @IsOptional()
     @Transform(({ value }) => {
@@ -52,4 +38,7 @@ export class CreateUserDTO {
     @IsUUID()
     owner_id?: string | null;
 
+    @ValidateNested()
+    @Type(() => AuthRegisterDto)
+    credentials: AuthRegisterDto
 }

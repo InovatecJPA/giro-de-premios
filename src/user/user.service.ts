@@ -4,31 +4,30 @@ import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { ResponseUserDTO } from './dto/response-user.dto';
 import { UserCreateData } from './interface/user-create-data.interface';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '../../generated/prisma';
 import bcrypt from 'bcryptjs'
 import { CreateUserDTO } from './dto/create-user.dto';
+import { User } from '../prisma/generated/prisma/client';
+import { Pagination } from '../utils/types/pagination.types';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) { }
 
-  async findAll(skip = 1, take = 10): Promise<ResponseUserDTO[]> {
+  async findAll(pagination: Pagination): Promise<ResponseUserDTO[]> {
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
         name: true,
         cpf: true,
-        email: true,
         number: true,
         social_media: true,
         saldo: true,
         comissao: true,
         profile: true,
         owner_id: true,
-        hashed_password: true
       },
-      skip: (skip - 1) * take,
-      take
+      skip: (pagination.skip - 1) * pagination.take,
+      take: pagination.take
     });
 
     return users;
@@ -44,11 +43,9 @@ export class UserService {
         id: true,
         name: true,
         cpf: true,
-        email: true,
         number: true,
         social_media: true,
         saldo: true,
-        hashed_password: true,
         comissao: true,
         profile: true,
         owner_id: true,
@@ -58,15 +55,6 @@ export class UserService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    return user;
-  }
 
   async findByCpf(cpf: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
@@ -79,17 +67,11 @@ export class UserService {
   }
 
   async create(dataUser: CreateUserDTO) {
-    const { password, ...dataWithoutPassword } = dataUser;
-
-    if (await this.findByEmail(dataWithoutPassword.email))
-      throw new ConflictException("Email já cadastrado");
-
-    if (await this.findByCpf(dataWithoutPassword.cpf))
+    if (await this.findByCpf(dataUser.cpf))
       throw new ConflictException("Cpf já cadastrado");
 
     const data: UserCreateData = {
-      ...dataWithoutPassword,
-      hashed_password: await bcrypt.hash(password, 10),
+      ...dataUser,
       saldo: 0n
     }
 
