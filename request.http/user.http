@@ -12,12 +12,15 @@ Content-Type: application/json
 
 {
   "name": "John Doe",
-  "email": "d1e221@example.com",
-  "cpf": "10321329113",
-  "number": "83999958296",
+  "cpf": "10321399013",
+  "number": "83949958296",
   "profile": "influencer",
-  "comissao": "0.50",
-  "password": "Inova@123"
+  "comissao": "0.01",
+  "credentials": {
+    "provider": "email",
+    "provider_user_id": "de22821@example.com",
+    "password": "Inova@123"
+  }
 }
 
 ### Update a user using PUT

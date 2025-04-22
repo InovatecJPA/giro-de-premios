@@ -7,7 +7,7 @@ import { PutUpdateUser } from './dto/put-update-user.dto';
 
 import { plainToInstance } from 'class-transformer';
 import { AuthService } from '../auth/auth.service';
-import { IsPublic } from '../decorator/is-public-validator.decorator';
+import { IsPublic } from '../decorators/is-public-validator.decorator';
 
 @Controller('users')
 export default class UserController {
@@ -17,7 +17,7 @@ export default class UserController {
   ) { }
 
   @Get()
-  async findAll(@Query('skip') skip = 1, @Query('take') take = 10): Promise<any> {
+  async findAll(@Query('skip') skip = 1, @Query('take') take = 10) {
     try {
 
       const pagination = {
@@ -26,18 +26,19 @@ export default class UserController {
       }
 
       const users = await this.userService.findAll(pagination);
-      return { data: users }
+      console.log (users)
+      return { data: { users } }
     } catch (error) {
       throw error
     }
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<any> {
+  async findById(@Param('id') id: string) {
     try {
-      const user = await this.userService.findById(id);
+      const users = await this.userService.findById(id);
 
-      return { data: user }
+      return { data: { users } }
     } catch (error) {
       throw error
     }
@@ -45,25 +46,10 @@ export default class UserController {
 
   @IsPublic()
   @Post()
-  async create(@Body() data: CreateUserDTO): Promise<any> {
+  async create(@Body() data: CreateUserDTO) {
     try {
-      const user = await this.userService.create(data);
 
-      const credentialsPayload = {
-        ...data.credentials,
-        user_id: user.id
-      }
-
-      if (data.credentials.provider === "email") {
-        await this.authService.registerLocal(credentialsPayload);
-      } else {
-        await this.authService.registerSocial(credentialsPayload);
-      }
-
-      const userResponse = plainToInstance(ResponseUserDTO, {
-        ...user,
-        comissao: user.comissao.toString()
-      });
+      const userResponse = await this.userService.create(data);
 
       return { data: { userResponse } }
     } catch (error) {
@@ -73,7 +59,7 @@ export default class UserController {
 
 
   @Patch(':id')
-  async updatePatch(@Param('id') id: string, @Body() data: PatchUpdateUser): Promise<any> {
+  async updatePatch(@Param('id') id: string, @Body() data: PatchUpdateUser) {
     try {
 
       const user = await this.userService.update(id, data);
@@ -90,7 +76,7 @@ export default class UserController {
   }
 
   @Put(':id')
-  async updatePut(@Param('id') id: string, @Body() data: PutUpdateUser): Promise<any> {
+  async updatePut(@Param('id') id: string, @Body() data: PutUpdateUser) {
     try {
       const user = await this.userService.update(id, data);
 
@@ -107,10 +93,10 @@ export default class UserController {
 
   @Delete(':id')
   @HttpCode(204)
-  async delete(@Param('id') id: string): Promise<any> {
+  async delete(@Param('id') id: string) {
     try {
       if (await this.userService.delete(id))
-        return { data: "Usuario deletado com sucesso" };
+        return { data: {message: "Usuario deletado com sucesso"} };
     } catch (error) {
       throw error
     }

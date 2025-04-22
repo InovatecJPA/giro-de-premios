@@ -1,44 +1,54 @@
-import { Transform, Type } from "class-transformer";
-import { IsOptional, IsEmail, IsEnum, IsPhoneNumber, IsString, IsStrongPassword, IsUUID, Matches, IsDecimal, ValidateNested } from "class-validator";
-import { Profiles } from "@prisma/client";
-import { AuthRegisterDto } from "../../auth/dto/auth-register.dto";
-
-
+import { Transform, Type } from 'class-transformer';
+import {
+  IsOptional,
+  IsEnum,
+  IsPhoneNumber,
+  IsString,
+  IsUUID,
+  Matches,
+  ValidateNested,
+  IsNumber,
+  Min,
+  Max,
+} from 'class-validator';
+import { Profiles } from 'src/prisma/generated/prisma/client';
+import { AuthRegisterDto } from '../../auth/dto/auth-register.dto';
+import { AuthLoginDto } from 'src/auth/dto/auth-login.dto';
 
 export class CreateUserDTO {
-    @IsString()
-    name: string;
+  @IsString()
+  name: string;
 
-    @IsString()
-    @Matches(/^\d{11}$/, { message: 'CPF must have exactly 11 digits' })
-    cpf: string;
+  @IsString()
+  @Matches(/^\d{11}$/, { message: 'CPF must have exactly 11 digits' })
+  cpf: string;
 
+  @IsPhoneNumber('BR', { message: 'Telefone Invalido' })
+  number: string;
 
-    @IsPhoneNumber('BR', { message: 'Telefone Invalido' })
-    number: string;
+  @IsString()
+  @IsOptional()
+  @Matches(/(?:https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/)
+  social_media?: string;
 
-    @IsString()
-    @IsOptional()
-    @Matches(/(?:https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/)
-    social_media?: string;
+  @IsOptional()
+  @Type(() => Number)      
+  @IsNumber(
+    { maxDecimalPlaces: 2 }, 
+    { message: 'comissão deve ser um número' }
+  )
+  @Min(0, { message: 'comissão mínima é 0.00' })
+  @Max(1, { message: 'comissão máxima é 1.00' })
+  comissao?: number;
 
-    @IsOptional()
-    @Transform(({ value }) => {
-        if (value === undefined || value === null) {
-            return "0.00";
-        }
-        return value.toString();
-    })
-    comissao: string;
+  @IsEnum(Profiles)
+  profile: Profiles;
 
-    @IsEnum(Profiles)
-    profile: Profiles;
+  @IsOptional()
+  @IsUUID()
+  owner_id?: string | null;
 
-    @IsOptional()
-    @IsUUID()
-    owner_id?: string | null;
-
-    @ValidateNested()
-    @Type(() => AuthRegisterDto)
-    credentials: AuthRegisterDto
+  @ValidateNested()
+  @Type(() => AuthLoginDto)
+  credentials: AuthLoginDto;
 }

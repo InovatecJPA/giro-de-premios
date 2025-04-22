@@ -1,40 +1,62 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PutUpdateUser } from './dto/put-update-user.dto';
 import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { ResponseUserDTO } from './dto/response-user.dto';
 import { UserCreateData } from './interface/user-create-data.interface';
 import { PrismaService } from '../prisma/prisma.service';
-import bcrypt from 'bcryptjs'
+import { PrismaClient, User } from 'src/prisma/generated/prisma/client';
+import { PaginatedResult, PaginationOptions } from '../utils/types/pagination.types';
+import { plainToInstance } from 'class-transformer';
+import { AuthService } from 'src/auth/auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { User } from '../prisma/generated/prisma/client';
-import { Pagination } from '../utils/types/pagination.types';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private authService: AuthService
+  ) {}
 
-  async findAll(pagination: Pagination): Promise<ResponseUserDTO[]> {
-    const users = await this.prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        cpf: true,
-        number: true,
-        social_media: true,
-        saldo: true,
-        comissao: true,
-        profile: true,
-        owner_id: true,
-      },
-      skip: (pagination.skip - 1) * pagination.take,
-      take: pagination.take
-    });
+  async findAll(paginationOptions: PaginationOptions) {
+    let { total, items, pages, skip, take } = await this.prisma.paginate(
+      this.prisma.user,
+        {
+        ...paginationOptions,
+        select: {
+          id: true,
+          name: true,
+          cpf: true,
+          number: true,
+          social_media: true,
+          saldo: true,
+          comissao: true,
+          profile: true,
+          owner_id: true,
+        },
+      }
+    );
+    
+  const processedItems = items.map(item => ({
+    ...item,
+    comissao: item.comissao !== null && item.comissao !== undefined 
+      ? (typeof item.comissao.toNumber === 'function' 
+          ? item.comissao.toNumber() 
+          : parseFloat(String(item.comissao)) || 0)
+      : 0
+  }));
 
-    return users;
+  const data = plainToInstance(ResponseUserDTO, processedItems);
+    return {
+      data, 
+      meta: {total, pages, skip, take}
+    };
   }
 
-  async findById(id: string): Promise<ResponseUserDTO | null> {
-
+  async findById(id: string) {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -49,12 +71,11 @@ export class UserService {
         comissao: true,
         profile: true,
         owner_id: true,
-      }
+      },
     });
 
     return user;
   }
-
 
   async findByCpf(cpf: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
@@ -66,25 +87,39 @@ export class UserService {
     return user;
   }
 
-  async create(dataUser: CreateUserDTO) {
-    if (await this.findByCpf(dataUser.cpf))
-      throw new ConflictException("Cpf já cadastrado");
+  async create(data: CreateUserDTO) {
+    const { credentials, ...userData } = data;
 
-    const data: UserCreateData = {
-      ...dataUser,
-      saldo: 0n
-    }
+    return this.prisma.$transaction(async (prisma) => {
+      
+      if (await this.findByCpf(userData.cpf)) {
+        throw new ConflictException('CPF já cadastrado');
+      }
 
-    const user = await this.prisma.user.create({
-      data,
+      const user = await prisma.user.create({ data: userData });
+      console.log(user.id)
+      const credentialsPayload = {
+        ...credentials,
+        user_id: user.id,
+      };
+
+
+      if (credentials.provider === "email") {
+        await this.authService.registerLocal(credentialsPayload, prisma as PrismaClient)
+      } else {
+        await this.authService.registerSocial(credentialsPayload, prisma as PrismaClient)
+      }
+
+      return plainToInstance(ResponseUserDTO, {
+        ...user,
+        comissao: user.comissao.toString(),
+      });
     });
-
-    return user;
   }
 
   async update(id: string, data: PutUpdateUser | PatchUpdateUser) {
-    if (!await this.exists(id))
-      throw new NotFoundException("Usuario não encontrado");
+    if (!(await this.exists(id)))
+      throw new NotFoundException('Usuario não encontrado');
 
     const user = await this.prisma.user.update({
       where: {
@@ -97,9 +132,8 @@ export class UserService {
   }
 
   async delete(id: string) {
-    if (!await this.exists(id))
-      throw new NotFoundException("Usuario não encontrado");
-
+    if (!(await this.exists(id)))
+      throw new NotFoundException('Usuario não encontrado');
 
     const user = await this.prisma.user.delete({
       where: {
@@ -107,8 +141,7 @@ export class UserService {
       },
     });
 
-    if (!user)
-      throw new Error("Erro ao deletar usuario");
+    if (!user) throw new Error('Erro ao deletar usuario');
 
     return user;
   }
