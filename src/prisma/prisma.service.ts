@@ -1,6 +1,7 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from 'src/prisma/generated/prisma/client';
-import { PaginationOptions } from 'src/utils/types/pagination.types';
+import { PrismaClient } from './generated/prisma/client';
+import { PaginationOptions } from '../utils/types/pagination.types';
+
 @Injectable()
 export class PrismaService
   extends PrismaClient
@@ -33,12 +34,12 @@ export class PrismaService
     const [total, items] = await this.$transaction(async () => {
       return Promise.all([
         model.count({ where: options.where }),
-        model.findMany({ 
+        model.findMany({
           where: options.where,
           select: options.select,
-          orderBy: options.orderBy, 
-          skip: skipCount, 
-          take 
+          orderBy: options.orderBy,
+          skip: skipCount,
+          take
         }),
       ]);
     });

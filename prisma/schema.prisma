@@ -42,15 +42,15 @@ model User {
   cpf          String   @unique
   number       String
   social_media String?
-  saldo        BigInt   @default(0)
+  saldo        Decimal  @default(0.00) @db.Decimal(10, 2)
   comissao     Decimal  @default(0.00) @db.Decimal(3, 2)
   profile      Profiles
   owner_id     String?
-  created_at  DateTime @default(now())  
-  updated_at  DateTime @updatedAt
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
-  owner        User?    @relation("UserOwnerSub", fields: [owner_id], references: [id])
-  sub_users    User[]   @relation("UserOwnerSub")
+  owner     User?  @relation("UserOwnerSub", fields: [owner_id], references: [id])
+  sub_users User[] @relation("UserOwnerSub")
 
   auths           Auth[]
   raffle_editions RaffleEdition[]
@@ -79,8 +79,8 @@ model ForgotPasswordToken {
   auth_id                      String
   password_reset_token         String
   password_reset_token_expires DateTime
-  created_at  DateTime @default(now())  
-  updated_at  DateTime @updatedAt
+  created_at                   DateTime @default(now())
+  updated_at                   DateTime @updatedAt
 
   authId Auth @relation(fields: [auth_id], references: [id])
 
@@ -94,58 +94,57 @@ model RaffleEdition {
   status           RaffleEditionStatus @default(pending)
   total_tickets    Int
   winner_tickets   Int
-  price Decimal @db.Decimal(5,2)
+  price            Decimal             @db.Decimal(5, 2)
   raffle_draw_date DateTime
   user_id          String?
-  created_at  DateTime @default(now())  
-  updated_at  DateTime @updatedAt
+  created_at       DateTime            @default(now())
+  updated_at       DateTime            @updatedAt
 
-  User             User?               @relation(fields: [user_id], references: [id])
-  TicketRaffle     TicketRaffle[]
-  DiscountRule     DiscountRule[]
+  User         User?          @relation(fields: [user_id], references: [id])
+  TicketRaffle TicketRaffle[]
+  DiscountRule DiscountRule[]
 
   @@map("raffle_editions")
 }
 
 model Prize {
-  id             String         @id @default(uuid())
+  id             String   @id @default(uuid())
   prize_name     String
   prize_quantity Int
-  created_at  DateTime @default(now())  
-  updated_at  DateTime @updatedAt
-  
-  TicketRaffle   TicketRaffle[]
-  
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  TicketRaffle TicketRaffle[]
+
   @@map("prizes")
 }
 
 model TicketRaffle {
   id                String             @id @default(uuid())
-  raffle_number     BigInt  
+  raffle_number     BigInt
   status            TicketRaffleStatus @default(available)
   prize_id          String?
   raffle_edition_id String
-  created_at        DateTime @default(now())  
-  updated_at        DateTime @updatedAt
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
 
-  prize             Prize?              @relation(fields: [prize_id], references: [id])
-  raffle_edition    RaffleEdition      @relation(fields: [raffle_edition_id], references: [id])
-  ticket_payment    TicketPayment[]    @relation("raffle_ticket_payments")
-  
-  @@map("ticket_raffles")
+  prize          Prize?          @relation(fields: [prize_id], references: [id])
+  raffle_edition RaffleEdition   @relation(fields: [raffle_edition_id], references: [id])
+  ticket_payment TicketPayment[] @relation("raffle_ticket_payments")
+
   @@unique([raffle_number, raffle_edition_id])
-
+  @@map("ticket_raffles")
 }
 
 model TicketPayment {
-  id            String         @id @default(uuid())
-  cpf           String
-  email         String
-  name          String
-  number        String?
-  discount      Decimal @db.Decimal(3,2)
-  total_value   BigInt        
-  created_at  DateTime @default(now())  
+  id          String   @id @default(uuid())
+  cpf         String
+  email       String
+  name        String
+  number      String?
+  discount    Decimal  @db.Decimal(3, 2)
+  total_value BigInt
+  created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
   ticket_raffle TicketRaffle[] @relation("raffle_ticket_payments")
@@ -160,18 +159,19 @@ model Extract {
   type              ExtractType
   ticket_payment_id String?
   ticket_payment    TicketPayment? @relation(fields: [ticket_payment_id], references: [id])
-  created_at  DateTime @default(now())  
+  created_at        DateTime       @default(now())
 
   @@map("extracts")
 }
 
 model DiscountRule {
-  id             String  @id @default(uuid())
-  min_tickets    Int     
-  discount_value Decimal @db.Decimal(3, 2)
+  id                String  @id @default(uuid())
+  min_tickets       Int
+  discount_value    Decimal @db.Decimal(3, 2)
   raffle_edition_id String
 
-  RaffleEdition  RaffleEdition @relation(fields: [raffle_edition_id], references: [id])
+  RaffleEdition RaffleEdition @relation(fields: [raffle_edition_id], references: [id])
 }
+
 // model PrizeRoulette {}
 // model PaymentTransaction {}\

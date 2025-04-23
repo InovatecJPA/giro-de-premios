@@ -9,15 +9,13 @@ describe('[PUT] UserController (e2e)', () => {
       .post('/users')
       .send(defaultUser);
 
-      console.log('PROCURA AQUI', createResponse.body.data);
-      
     const userId = createResponse.body.data.userResponse.id;
 
+    const { credentials, ...userData } = defaultUser;
 
     const updatedUserData = {
-      ...defaultUser,
+      ...userData,
       name: 'Updated User',
-      email: 'updated@example.com',
     };
 
     const response = await request(app.getHttpServer())
@@ -30,7 +28,6 @@ describe('[PUT] UserController (e2e)', () => {
         userResponse: {
           id: userId,
           name: updatedUserData.name,
-          email: updatedUserData.email,
           cpf: updatedUserData.cpf,
           number: updatedUserData.number,
           profile: updatedUserData.profile,
@@ -44,9 +41,11 @@ describe('[PUT] UserController (e2e)', () => {
   });
 
   test('/users/:id - should fail when user does not exist', async () => {
+    const { credentials, ...userData } = defaultUser
+
     const response = await request(app.getHttpServer())
       .put('/users/99999999-9999-9999-9999-999999999999')
-      .send(defaultUser);
+      .send(userData);
 
     expect(response.status).toBe(404);
   });

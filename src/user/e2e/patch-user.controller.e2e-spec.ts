@@ -25,7 +25,6 @@ describe('[PATCH] UserController (e2e)', () => {
                 userResponse: ({
                     id: userId,
                     name: partialUpdateData.name,
-                    email: defaultUser.email,
                     cpf: defaultUser.cpf,
                     number: defaultUser.number,
                     profile: defaultUser.profile,

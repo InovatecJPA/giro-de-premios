@@ -1,5 +1,6 @@
 import { IsBoolean, IsDate, IsString, IsUUID } from "class-validator";
 
+
 export class AuthResponseDto {
     @IsUUID('4')
     id: string;

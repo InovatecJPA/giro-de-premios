@@ -6,25 +6,24 @@ import {
 import { PutUpdateUser } from './dto/put-update-user.dto';
 import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { ResponseUserDTO } from './dto/response-user.dto';
-import { UserCreateData } from './interface/user-create-data.interface';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClient, User } from 'src/prisma/generated/prisma/client';
-import { PaginatedResult, PaginationOptions } from '../utils/types/pagination.types';
+import { PaginationOptions } from '../utils/types/pagination.types';
 import { plainToInstance } from 'class-transformer';
-import { AuthService } from 'src/auth/auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   async findAll(paginationOptions: PaginationOptions) {
     let { total, items, pages, skip, take } = await this.prisma.paginate(
       this.prisma.user,
-        {
+      {
         ...paginationOptions,
         select: {
           id: true,
@@ -39,20 +38,20 @@ export class UserService {
         },
       }
     );
-    
-  const processedItems = items.map(item => ({
-    ...item,
-    comissao: item.comissao !== null && item.comissao !== undefined 
-      ? (typeof item.comissao.toNumber === 'function' 
-          ? item.comissao.toNumber() 
-          : parseFloat(String(item.comissao)) || 0)
-      : 0
-  }));
 
-  const data = plainToInstance(ResponseUserDTO, processedItems);
+    const processedItems = items.map(item => ({
+      ...item,
+      comissao: item.comissao !== null && item.comissao !== undefined
+        ? (typeof item.comissao.toNumber === 'function'
+          ? item.comissao.toNumber()
+          : parseFloat(String(item.comissao)) || 0)
+        : 0
+    }));
+
+    const data = plainToInstance(ResponseUserDTO, processedItems);
     return {
-      data, 
-      meta: {total, pages, skip, take}
+      data,
+      meta: { total, pages, skip, take }
     };
   }
 
@@ -91,13 +90,13 @@ export class UserService {
     const { credentials, ...userData } = data;
 
     return this.prisma.$transaction(async (prisma) => {
-      
+
       if (await this.findByCpf(userData.cpf)) {
         throw new ConflictException('CPF já cadastrado');
       }
 
       const user = await prisma.user.create({ data: userData });
-      console.log(user.id)
+
       const credentialsPayload = {
         ...credentials,
         user_id: user.id,
@@ -135,15 +134,13 @@ export class UserService {
     if (!(await this.exists(id)))
       throw new NotFoundException('Usuario não encontrado');
 
-    const user = await this.prisma.user.delete({
-      where: {
-        id,
-      },
-    });
 
-    if (!user) throw new Error('Erro ao deletar usuario');
+    const user = await this.prisma.$transaction([
+      this.prisma.auth.deleteMany({ where: { user_id: id } }),
+      this.prisma.user.delete({ where: { id } }),
+    ]);
 
-    return user;
+    return user
   }
 
   async exists(id: string) {

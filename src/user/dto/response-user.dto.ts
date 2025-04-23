@@ -1,6 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { IsBigInt } from '../../decorators/bigint-validator.decorator';
-import { Profiles } from 'src/prisma/generated/prisma/client';
+import { Profiles } from '../../prisma/generated/prisma/client';
 
 @Exclude()
 export class ResponseUserDTO {
@@ -20,13 +20,12 @@ export class ResponseUserDTO {
   social_media: string | null;
 
   @Expose()
-  @IsBigInt()
   @Transform(({ value }) => value.toString())
-  saldo: bigint;
+  saldo: string;
 
   @Expose()
   @Transform(({ value }) => value.toString())
-  comissao: number;
+  comissao: string;
 
   @Expose()
   profile: Profiles;

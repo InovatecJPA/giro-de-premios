@@ -11,9 +11,9 @@ import {
   Min,
   Max,
 } from 'class-validator';
-import { Profiles } from 'src/prisma/generated/prisma/client';
 import { AuthRegisterDto } from '../../auth/dto/auth-register.dto';
-import { AuthLoginDto } from 'src/auth/dto/auth-login.dto';
+import { Profiles } from '../../prisma/generated/prisma/client';
+import { AuthLoginDto } from '../../auth/dto/auth-login.dto';
 
 export class CreateUserDTO {
   @IsString()
@@ -32,9 +32,9 @@ export class CreateUserDTO {
   social_media?: string;
 
   @IsOptional()
-  @Type(() => Number)      
+  @Type(() => Number)
   @IsNumber(
-    { maxDecimalPlaces: 2 }, 
+    { maxDecimalPlaces: 2 },
     { message: 'comissão deve ser um número' }
   )
   @Min(0, { message: 'comissão mínima é 0.00' })

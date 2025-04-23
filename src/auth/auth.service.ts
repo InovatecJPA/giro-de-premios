@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -25,9 +26,9 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
-  ) {}
+  ) { }
   async findAll(paginationOptions: PaginationOptions) {
-    const {items, pages, skip, take, total} = await this.prisma.paginate(
+    const { items, pages, skip, take, total } = await this.prisma.paginate(
       this.prisma.auth,
       {
         ...paginationOptions,
@@ -56,8 +57,8 @@ export class AuthService {
     user_id: string,
     paginationOptions: PaginationOptions,
   ) {
-    const {items, pages, skip, take, total} = await this.prisma.paginate(
-      this.prisma.auth, 
+    const { items, pages, skip, take, total } = await this.prisma.paginate(
+      this.prisma.auth,
       {
         where: { user_id },
         select: {
@@ -143,7 +144,7 @@ export class AuthService {
     );
 
     if (authExists) {
-      throw new BadRequestException('Email já cadastrado');
+      throw new ConflictException('Email já cadastrado');
     }
 
     const dataWithoutPassword = {
@@ -185,7 +186,7 @@ export class AuthService {
     }
 
     const auth = await db.auth.create({
-      data: {...data, is_verified: true},
+      data: { ...data, is_verified: true },
     });
 
     return auth;
@@ -241,9 +242,13 @@ export class AuthService {
     if (!auth.password_hash) return false;
     return await bcrypt.compare(password, auth.password_hash);
   }
-  //TODO
-  async forgotPassword() {}
+
+
+
 
   //TODO
-  async resetPassword() {}
+  async forgotPassword() { }
+
+  //TODO
+  async resetPassword() { }
 }

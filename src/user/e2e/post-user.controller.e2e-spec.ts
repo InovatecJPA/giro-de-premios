@@ -20,12 +20,11 @@ describe('[POST] UserController (e2e)', () => {
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
           ),
           name: defaultUser.name,
-          email: defaultUser.email,
           cpf: defaultUser.cpf,
           number: defaultUser.number,
           profile: defaultUser.profile,
-          comissao: new Decimal(defaultUser.comissao || 0).toString(),
           saldo: '0',
+          comissao: new Decimal(defaultUser.comissao || 0).toString(),
           owner_id: null,
           social_media: null,
         },
@@ -57,7 +56,6 @@ describe('[POST] UserController (e2e)', () => {
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
           ),
           name: userWithOwner.name,
-          email: userWithOwner.email,
           cpf: userWithOwner.cpf,
           number: userWithOwner.number,
           profile: userWithOwner.profile,
@@ -88,7 +86,6 @@ describe('[POST] UserController (e2e)', () => {
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
           ),
           name: userWithSocialMedia.name,
-          email: userWithSocialMedia.email,
           cpf: userWithSocialMedia.cpf,
           number: userWithSocialMedia.number,
           profile: userWithSocialMedia.profile,
@@ -126,7 +123,6 @@ describe('[POST] UserController (e2e)', () => {
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
           ),
           name: userWithOwnerAndSocialMedia.name,
-          email: userWithOwnerAndSocialMedia.email,
           cpf: userWithOwnerAndSocialMedia.cpf,
           number: userWithOwnerAndSocialMedia.number,
           profile: userWithOwnerAndSocialMedia.profile,
@@ -161,8 +157,13 @@ describe('[POST] UserController (e2e)', () => {
 
     const userSameCpfDifferentEmail = {
       ...defaultUser,
-      email: '9Fb4r@example.com',
+      credentials: {
+        ...defaultUser.credentials,
+        provider_user_id: 'userSameCpfDifferentEmail@gmail.com',
+
+      }
     };
+
 
     const response = await request(app.getHttpServer())
       .post('/users')

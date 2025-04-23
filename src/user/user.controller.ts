@@ -26,7 +26,7 @@ export default class UserController {
       }
 
       const users = await this.userService.findAll(pagination);
-      console.log (users)
+
       return { data: { users } }
     } catch (error) {
       throw error
@@ -96,7 +96,7 @@ export default class UserController {
   async delete(@Param('id') id: string) {
     try {
       if (await this.userService.delete(id))
-        return { data: {message: "Usuario deletado com sucesso"} };
+        return
     } catch (error) {
       throw error
     }
