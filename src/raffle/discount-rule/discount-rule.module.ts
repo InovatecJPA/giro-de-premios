@@ -6,6 +6,6 @@ import { DiscountRuleService } from "./discount-rule.service";
     imports: [],
     controllers: [DiscountRuleController],
     providers: [DiscountRuleService],
-    exports: []
+    exports: [DiscountRuleService]
 })
-export class DiscountRuleModule {}
+export class DiscountRuleModule { }

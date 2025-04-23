@@ -54,6 +54,7 @@ model User {
 
   auths           Auth[]
   raffle_editions RaffleEdition[]
+  Extract         Extract[]
 
   @@map("users")
 }
@@ -77,10 +78,9 @@ model Auth {
 model ForgotPasswordToken {
   id                           String   @id @default(uuid())
   auth_id                      String
-  password_reset_token         String
-  password_reset_token_expires DateTime
+  password_reset_token         String   @unique
+  password_reset_token_expires DateTime @default(now())
   created_at                   DateTime @default(now())
-  updated_at                   DateTime @updatedAt
 
   authId Auth @relation(fields: [auth_id], references: [id])
 
@@ -120,32 +120,32 @@ model Prize {
 }
 
 model TicketRaffle {
-  id                String             @id @default(uuid())
-  raffle_number     BigInt
-  status            TicketRaffleStatus @default(available)
-  prize_id          String?
-  raffle_edition_id String
-  created_at        DateTime           @default(now())
-  updated_at        DateTime           @updatedAt
+  id                   String             @id @default(uuid())
+  ticket_raffle_number BigInt
+  status               TicketRaffleStatus @default(available)
+  prize_id             String?
+  raffle_edition_id    String
+  created_at           DateTime           @default(now())
+  updated_at           DateTime           @updatedAt
 
   prize          Prize?          @relation(fields: [prize_id], references: [id])
   raffle_edition RaffleEdition   @relation(fields: [raffle_edition_id], references: [id])
   ticket_payment TicketPayment[] @relation("raffle_ticket_payments")
 
-  @@unique([raffle_number, raffle_edition_id])
+  @@unique([ticket_raffle_number, raffle_edition_id])
   @@map("ticket_raffles")
 }
 
 model TicketPayment {
-  id          String   @id @default(uuid())
-  cpf         String
-  email       String
-  name        String
-  number      String?
-  discount    Decimal  @db.Decimal(3, 2)
-  total_value BigInt
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id            String   @id @default(uuid())
+  cpf           String
+  email         String
+  name          String
+  number        String?
+  ticket_amount Int
+  discount      Decimal  @db.Decimal(3, 2)
+  total_value   Decimal  @db.Decimal(10, 2)
+  created_at    DateTime @default(now())
 
   ticket_raffle TicketRaffle[] @relation("raffle_ticket_payments")
   Extract       Extract[]
@@ -154,12 +154,15 @@ model TicketPayment {
 }
 
 model Extract {
-  id                String         @id @default(uuid())
-  amount            BigInt
+  id                String      @id @default(uuid())
+  amount            Decimal     @db.Decimal(10, 2)
   type              ExtractType
   ticket_payment_id String?
-  ticket_payment    TicketPayment? @relation(fields: [ticket_payment_id], references: [id])
-  created_at        DateTime       @default(now())
+  user_id           String
+  created_at        DateTime    @default(now())
+
+  ticket_payment TicketPayment? @relation(fields: [ticket_payment_id], references: [id])
+  user           User           @relation(fields: [user_id], references: [id])
 
   @@map("extracts")
 }

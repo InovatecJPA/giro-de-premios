@@ -1,4 +1,3 @@
-// src/ticket-raffle/ticket-raffle.controller.ts
 import {
   Body,
   Controller,
@@ -24,8 +23,8 @@ export class TicketRaffleController {
 
   @Get()
   async findAll(
-    @Query('skip') skip = 0,
-    @Query('take') take = 10,
+    @Query('page') skip = 0,
+    @Query('limit') take = 10,
   ) {
     const result = await this.ticketRaffleService.findAll({ skip, take });
     return { data: { result } };

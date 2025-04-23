@@ -1,4 +1,3 @@
-// prize.controller.ts
 import {
   Controller,
   Get,
@@ -24,8 +23,8 @@ export class PrizeController {
 
   @Get()
   async findAll(
-    @Query('skip') skip = 1,
-    @Query('take') take = 10,
+    @Query('page') skip = 1,
+    @Query('limit') take = 10,
   ): Promise<any> {
     try {
       const pagination = { skip, take };

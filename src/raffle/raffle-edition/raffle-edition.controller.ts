@@ -1,4 +1,3 @@
-// raffle-edition.controller.ts
 import {
   Controller,
   Get,
@@ -24,8 +23,8 @@ export class RaffleEditionController {
 
   @Get()
   async findAll(
-    @Query('skip') skip = 1,
-    @Query('take') take = 10,
+    @Query('page') skip = 1,
+    @Query('limit') take = 10,
   ) {
     try {
       const pagination = { skip, take };

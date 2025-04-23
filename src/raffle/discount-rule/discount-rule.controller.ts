@@ -1,4 +1,3 @@
-// src/discount-rule/discount-rule.controller.ts
 import {
   Body,
   Controller,
@@ -24,8 +23,8 @@ export class DiscountRuleController {
 
   @Get()
   async findAll(
-    @Query('skip') skip = 0,
-    @Query('take') take = 10,
+    @Query('page') skip = 0,
+    @Query('limit') take = 10,
   ) {
     const response = await this.service.findAll({ skip, take });
     return { data: { response } };

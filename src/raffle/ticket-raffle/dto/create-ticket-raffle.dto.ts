@@ -14,16 +14,16 @@ export class CreateTicketRaffleDto {
 
   @IsBigInt()
   @Min(1)
-  raffle_number: bigint;
+  ticket_raffle_number: bigint;
 
   @IsEnum(TicketRaffleStatus)
   @IsOptional()
   status?: TicketRaffleStatus;
 
   @IsOptional()
-  @IsUUID()
+  @IsUUID('4')
   prize_id: string;
 
-  @IsUUID()
+  @IsUUID('4')
   raffle_edition_id: string;
 }
