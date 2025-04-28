@@ -1,9 +1,10 @@
 
 import { Controller, Get, Param, Post, Body, Query } from '@nestjs/common';
 import { ExtractService } from './extract.service';
-import { CreateExtractDto } from './dto/create-extract.dto';
-import { ResponseExtractDto } from './dto/response-extract.dto';
+import { CreateDepositExtractDto } from './dto/create-deposit-extract.dto';
+import { ResponseDepositExtractDto } from './dto/response-deposit-extract.dto';
 import { plainToInstance } from 'class-transformer';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Controller('extract')
 export class ExtractController {
@@ -19,15 +20,12 @@ export class ExtractController {
     findById(@Param('id') id: string) {
         const extract = this.extractService.findById(id);
 
-        const extractResponse = plainToInstance(ResponseExtractDto, extract);
+        const extractResponse = plainToInstance(ResponseDepositExtractDto, extract);
         return { data: { extractResponse } }
     }
 
     @Post()
-    create(@Body() data: CreateExtractDto) {
-        const extract = this.extractService.create(data);
-
-        const extractResponse = plainToInstance(ResponseExtractDto, extract);
-        return { data: { extractResponse } }
+    deposit(@Body() dto: CreateDepositExtractDto) {
+        return this.extractService.deposit(new Decimal(dto.amount), dto.user_id, dto.ticket_payment_id);
     }
 }

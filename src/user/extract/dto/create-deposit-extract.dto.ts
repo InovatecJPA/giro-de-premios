@@ -1,7 +1,7 @@
-import { IsEnum, IsNumber, IsUUID, Min } from "class-validator";
+import { IsEnum, IsNumber, IsUUID, Min, ValidateIf } from "class-validator";
 import { ExtractType } from "../../../prisma/generated/prisma/client";
 
-export class CreateExtractDto {
+export class CreateDepositExtractDto {
     @IsUUID('4')
     user_id: string;
 

@@ -29,7 +29,7 @@ export class CreateUserDTO {
   @IsString()
   @IsOptional()
   @Matches(/(?:https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/)
-  social_media?: string;
+  social_media?: string | null
 
   @IsOptional()
   @Type(() => Number)
@@ -39,7 +39,7 @@ export class CreateUserDTO {
   )
   @Min(0, { message: 'comissão mínima é 0.00' })
   @Max(1, { message: 'comissão máxima é 1.00' })
-  comissao?: number;
+  comissao?: number
 
   @IsEnum(Profiles)
   profile: Profiles;

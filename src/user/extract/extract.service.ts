@@ -3,12 +3,18 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaginationOptions } from '../../utils/types/pagination.types';
 import { plainToInstance } from 'class-transformer';
-import { ResponseExtractDto } from './dto/response-extract.dto';
-import { CreateExtractDto } from './dto/create-extract.dto';
+import { ResponseDepositExtractDto } from './dto/response-deposit-extract.dto';
+import { CreateDepositExtractDto } from './dto/create-deposit-extract.dto';
+import { ExtractType, User } from '../../prisma/generated/prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
+import { UserService } from '../user.service';
 
 @Injectable()
 export class ExtractService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly userService: UserService
+    ) { }
 
     async findAll(paginationOptions: PaginationOptions) {
         const { items, pages, skip, take, total } = await this.prisma.paginate(
@@ -25,7 +31,7 @@ export class ExtractService {
             }
         )
 
-        const data = plainToInstance(ResponseExtractDto, items);
+        const data = items.map((item) => plainToInstance(ResponseDepositExtractDto, item))
 
         return {
             data: data,
@@ -39,9 +45,61 @@ export class ExtractService {
         });
     }
 
-    async create(data: CreateExtractDto) {
-        return this.prisma.extract.create({
-            data,
+
+    async deposit(valorTotal: Decimal, userId: string, ticket_payment_id: string) {
+        return await this.prisma.$transaction(async (prisma) => {
+            const userChain: User[] = [];
+            let currentUserId: string | undefined = userId;
+            let remainingValue = valorTotal;
+            const balanceUpdate: { id: string; saldo: Decimal, commission: Decimal }[] = [];
+
+            while (currentUserId) {
+                const user = await prisma.user.findUnique({ where: { id: currentUserId } });
+                if (!user) {
+                    if (userChain.length === 0) {
+                        throw new Error(`Initial user with ID ${userId} not found`);
+                    } else {
+                        break;
+                    }
+                }
+
+                userChain.push(user);
+                currentUserId = user.owner_id;
+            }
+
+            for (let i = userChain.length - 1; i >= 0; i--) {
+                const user = userChain[i];
+                const comissao = user.comissao;
+
+                const commission = remainingValue.times(comissao);
+                balanceUpdate.push({
+                    id: user.id,
+                    saldo: user.saldo.plus(commission),
+                    commission
+                });
+                remainingValue = remainingValue.times(new Decimal(1).minus(comissao));
+
+            }
+
+            const updatePromises = balanceUpdate.flatMap((update) => {
+
+                prisma.user.update({
+                    where: { id: update.id },
+                    data: { saldo: update.saldo }
+                }),
+                    prisma.extract.create({
+                        data: {
+                            amount: update.commission,
+                            type: ExtractType.deposit,
+                            user_id: update.id,
+                            ticket_payment_id
+                        }
+                    })
+            });
+
+            await Promise.all(updatePromises);
+
+            return remainingValue;
         });
     }
 }

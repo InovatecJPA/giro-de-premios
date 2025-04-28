@@ -39,7 +39,7 @@ export class UserService {
       }
     );
 
-    const processedItems = items.map(item => ({
+    const data = items.map(item => plainToInstance(ResponseUserDTO, {
       ...item,
       comissao: item.comissao !== null && item.comissao !== undefined
         ? (typeof item.comissao.toNumber === 'function'
@@ -48,7 +48,6 @@ export class UserService {
         : 0
     }));
 
-    const data = plainToInstance(ResponseUserDTO, processedItems);
     return {
       data,
       meta: { total, pages, skip, take }
@@ -70,6 +69,8 @@ export class UserService {
         comissao: true,
         profile: true,
         owner_id: true,
+        created_at: true,
+        updated_at: true,
       },
     });
 
