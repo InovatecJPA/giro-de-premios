@@ -29,6 +29,7 @@ enum Profiles {
 enum TicketRaffleStatus {
   bought
   available
+  reserved
 }
 
 enum ExtractType {
@@ -160,6 +161,7 @@ model Extract {
   ticket_payment_id String?
   user_id           String
   created_at        DateTime    @default(now())
+  comissao_user_id  String?
 
   ticket_payment TicketPayment? @relation(fields: [ticket_payment_id], references: [id])
   user           User           @relation(fields: [user_id], references: [id])
@@ -174,6 +176,8 @@ model DiscountRule {
   raffle_edition_id String
 
   RaffleEdition RaffleEdition @relation(fields: [raffle_edition_id], references: [id])
+
+  @@map("discount_rules")
 }
 
 // model PrizeRoulette {}
