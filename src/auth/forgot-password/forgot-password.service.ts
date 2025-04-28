@@ -25,7 +25,8 @@ export default class ForgotPasswordService {
                 },
             }
         )
-        const data = plainToInstance(ResponseForgotPasswordDTO, items);
+
+        const data = items.map((item) => plainToInstance(ResponseForgotPasswordDTO, item))
 
         return {
             data,

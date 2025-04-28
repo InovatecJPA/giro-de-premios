@@ -1,0 +1,27 @@
+POST http://localhost:3000/ticket-payment/buy-tickets
+Content-Type: application/json
+
+{
+    "cpf": "12345678901",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "number": "11999999999",
+    "ticket_amount": 1000,
+    "raffle_edition_id": "3680fa5e-ad5b-4f0a-927e-895f897e96c8"
+}
+###
+GET http://localhost:3000/ticket-queue/clear
+
+###
+POST http://localhost:3000/raffle-editions/
+Content-Type: application/json
+
+{
+    "title": "Raffle Edition Test",
+    "description": "This is a test",
+    "status": "pending",
+    "total_tickets": 1000,
+    "winner_tickets": 1,
+    "price": "1.00",
+    "raffle_draw_date": "2022-12-25T00:00:00.000Z"
+}

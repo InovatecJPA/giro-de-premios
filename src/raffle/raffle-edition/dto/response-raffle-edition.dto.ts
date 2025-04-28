@@ -1,4 +1,4 @@
-// dto/response-raffle-edition.dto.ts
+import { Decimal } from '@prisma/client/runtime/library';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import { RaffleEditionStatus } from 'src/prisma/generated/prisma/client';
 
@@ -23,8 +23,12 @@ export class ResponseRaffleEditionDto {
   winner_tickets: number;
 
   @Expose()
-  @Transform(({ value }) => value.toString())
-  price: string
+  @Transform(({ value }) => {
+    if (value instanceof Decimal) return value.toString();
+    if (typeof value === 'string') return value;
+    return new Decimal(value).toString();
+  })
+  price: string;
 
   @Expose()
   @Type(() => Date)

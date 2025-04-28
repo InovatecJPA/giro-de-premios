@@ -75,7 +75,7 @@ export class AuthService {
       }
     )
 
-    const data = plainToInstance(AuthResponseDto, items);
+    const data = items.map((item) => plainToInstance(AuthResponseDto, item));
 
     return {
       data,

@@ -11,8 +11,9 @@ export class CreateRaffleEditionDto {
 
   @IsOptional()
   @IsEnum(RaffleEditionStatus)
-  status?: RaffleEditionStatus;
+  status?: RaffleEditionStatus
 
+  @IsOptional()
   @IsInt()
   @Min(1)
   total_tickets: number;
@@ -30,5 +31,6 @@ export class CreateRaffleEditionDto {
 
   @IsOptional()
   @IsUUID()
-  user_id?: string;
+  user_id?: string | null
 }
+
