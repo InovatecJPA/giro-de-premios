@@ -3,10 +3,10 @@ import { Logger } from "@nestjs/common";
 import { TicketRaffleService } from "../ticket-raffle/ticket-raffle.service";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { Job } from "bull";
-import { Decimal } from "@prisma/client/runtime/library";
-import { RaffleEditionService } from "../../raffle-edition/raffle-edition.service";
-import { DiscountRuleService } from "../../discount-rule/discount-rule.service";
-import { CreateTicketPaymentDto } from "../ticket-payment/dto/create-ticket-payment.dto";
+import { generateRandomNumbers } from "../../../utils/functions/generateNumbers";
+import { CreateBodyTicketQueueDto } from "./dto/create-body-ticket-payment.dto";
+import { CreateTicketRaffleDto } from "../ticket-raffle/dto/create-ticket-raffle.dto";
+import { CreateTicketQueuePrizedDto } from "./dto/create-ticket-queue-prized.dto";
 
 @Processor('ticket-purchase')
 export class TicketQueueProcessor {
@@ -14,16 +14,48 @@ export class TicketQueueProcessor {
 
     constructor(
         private ticketRaffleService: TicketRaffleService,
-        private raffleEditionService: RaffleEditionService,
-        private discountRuleService: DiscountRuleService,
         private prisma: PrismaService
     ) { }
+
+    @Process({
+        name: 'add-prized-tickets',
+        concurrency: 1
+    })
+    async processAddPrizedTickets(job: Job<CreateTicketQueuePrizedDto>) {
+        this.logger.log(`Processando compra de tickets: ${job.id}, quantia: ${job.data.quantity}`)
+        const data = job.data
+        let prizedTicketsData: CreateTicketRaffleDto[] = []
+
+        try {
+            const generatedNumbers = generateRandomNumbers(data.quantity, [])
+
+            data.prizes.forEach((prize) => {
+                for (let i = 0; i < prize.quantity; i++) {
+                    prizedTicketsData.push({
+                        prize_id: prize.prize_id,
+                        raffle_edition_id: data.raffle_edition_id,
+                        ticket_raffle_number: BigInt(generatedNumbers.shift()!)
+                    })
+                }
+            })
+
+            await this.ticketRaffleService.createMany(prizedTicketsData)
+
+            return {
+                ticket_numbers: generatedNumbers
+            }
+        } catch (error) {
+            this.logger.error(error)
+        }
+
+
+    }
 
     @Process({
         name: 'buy-tickets',
         concurrency: 1
     })
-    async processBuyTickets(job: Job<CreateTicketPaymentDto>) {
+    async processBuyTickets(job: Job<CreateBodyTicketQueueDto>) {
         this.logger.log(`Processando compra de tickets: ${job.id}, quantia: ${job.data.ticket_amount}`)
         const data = job.data
 
@@ -35,7 +67,7 @@ export class TicketQueueProcessor {
                 )
                 const usedNumbers = raffles.map(raffle => Number(raffle.ticket_raffle_number))
 
-                const generatedNumbers = this.generateRandomNumbers(data.ticket_amount, usedNumbers)
+                const generatedNumbers = generateRandomNumbers(data.ticket_amount, usedNumbers)
 
                 const bigIntNumbers = generatedNumbers.map(n => BigInt(n));
 
@@ -46,25 +78,6 @@ export class TicketQueueProcessor {
                 );
 
 
-                const payment = await tx.ticketPayment.create({
-                    data: {
-                        cpf: data.cpf,
-                        email: data.email,
-                        name: data.name,
-                        number: data.number,
-                        ticket_amount: data.ticket_amount,
-                        discount: data.discount,
-                        total_value: data.total_value,
-                        ticket_raffle: {
-                            connect: bigIntNumbers.map(number => ({
-                                ticket_raffle_number_raffle_edition_id: {
-                                    raffle_edition_id: data.raffle_edition_id,
-                                    ticket_raffle_number: number
-                                }
-                            }))
-                        }
-                    }
-                });
 
                 await this.ticketRaffleService.confirmTicketPurchase(
                     data.raffle_edition_id,
@@ -73,7 +86,6 @@ export class TicketQueueProcessor {
                 )
 
                 return {
-                    payment_id: payment.id,
                     ticket_numbers: generatedNumbers
                 }
             }, {
@@ -90,32 +102,5 @@ export class TicketQueueProcessor {
         }
     }
 
-    private generateRandomNumbers(amount: number, usedNumbers: number[]): number[] {
-        const maxDigits = 9;
-        const maxNumber = Math.pow(10, maxDigits) - 1;
-        const uniqueNumbers: number[] = [];
-        const usedNumbersSet = new Set(usedNumbers.map(num => num.toString().padStart(maxDigits, '0')));
-        const maxAttempts = amount * 10;
 
-        if (amount > maxNumber - usedNumbers.length) {
-            throw new Error(`Not enough available numbers (${maxNumber} total, ${usedNumbers.length} used, ${amount} requested)`);
-        }
-
-        let attempts = 0;
-        while (uniqueNumbers.length < amount && attempts++ < maxAttempts) {
-            const randomNum = Math.floor(Math.random() * maxNumber) + 1;
-            const numStr = randomNum.toString().padStart(maxDigits, '0');
-
-            if (!usedNumbersSet.has(numStr)) {
-                usedNumbersSet.add(numStr);
-                uniqueNumbers.push(randomNum);
-            }
-        }
-
-        if (uniqueNumbers.length < amount) {
-            throw new Error(`Failed to generate all unique numbers after ${maxAttempts} attempts`);
-        }
-
-        return uniqueNumbers;
-    }
 }

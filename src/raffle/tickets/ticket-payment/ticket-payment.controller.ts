@@ -4,10 +4,7 @@ import { BuyingTicketsDto } from "./dto/buying-ticket.dto";
 import { TicketQueueService } from "../ticket-queue/ticket-queue.service";
 import { plainToInstance } from "class-transformer";
 import { ResponseTicketPaymentDto } from "./dto/response-ticket-payment.dto";
-import { CreateTicketPaymentDto } from "./dto/create-ticket-payment.dto";
-import { Decimal } from "@prisma/client/runtime/library";
-import { RaffleEditionService } from "../../raffle-edition/raffle-edition.service";
-import { NotFoundError } from "rxjs";
+
 
 @Controller('ticket-payment')
 export class TicketPaymentController {
@@ -36,7 +33,11 @@ export class TicketPaymentController {
     async buyTickets(@Body() buyingTicketsData: BuyingTicketsDto) {
         const ticketPayment = await this.ticketPaymentService.buyTickets(buyingTicketsData);
 
-        const ticketPaymentResponse = plainToInstance(ResponseTicketPaymentDto, ticketPayment);
+        const ticketPaymentResponse = plainToInstance(ResponseTicketPaymentDto, {
+            ...ticketPayment,
+            total_value: ticketPayment.total_value.toString(),
+            discount: ticketPayment.discount.toString()
+        });
 
         return { data: { ticketPaymentResponse } }
     }

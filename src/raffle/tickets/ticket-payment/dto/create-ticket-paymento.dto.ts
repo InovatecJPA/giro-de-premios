@@ -27,7 +27,4 @@ export class CreateTicketPaymentDto {
     @Transform(({ value }) => (value.toString()))
     total_value: string
 
-
-    @IsUUID('4')
-    raffle_edition_id: string
 }

@@ -1,8 +1,5 @@
-import { Type } from 'class-transformer';
 import {
   IsEnum,
-  IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsUUID,
   Min,
@@ -11,7 +8,6 @@ import { IsBigInt } from 'src/decorators/bigint-validator.decorator';
 import { TicketRaffleStatus } from 'src/prisma/generated/prisma/client';
 
 export class CreateTicketRaffleDto {
-
   @IsBigInt()
   @Min(1)
   ticket_raffle_number: bigint;

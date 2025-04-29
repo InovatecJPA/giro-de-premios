@@ -4,7 +4,6 @@ import { TicketRaffleModule } from "../ticket-raffle/ticket-raffle.module";
 import { TicketQueueService } from "./ticket-queue.service";
 import { TicketCleanupService } from "./ticket-cleanup.service";
 import { TicketQueueProcessor } from "./ticket-queue.processor";
-import { RaffleEditionModule } from "../../raffle-edition/raffle-edition.module";
 import { DiscountRuleModule } from "../../discount-rule/discount-rule.module";
 import { BullBoardModule } from "@bull-board/nestjs";
 import { BullAdapter } from "@bull-board/api/bullAdapter";
@@ -19,7 +18,6 @@ import { BullAdapter } from "@bull-board/api/bullAdapter";
             adapter: BullAdapter,
         }),
         TicketRaffleModule,
-        RaffleEditionModule,
         DiscountRuleModule,
     ],
     controllers: [],
