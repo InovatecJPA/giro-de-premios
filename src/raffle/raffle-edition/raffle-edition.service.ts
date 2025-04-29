@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PaginationOptions } from "src/utils/types/pagination.types";
 import { CreateRaffleEditionDto } from "./dto/create-raffle-edition.dto";
 import { PrismaService } from "../../prisma/prisma.service";
@@ -11,6 +11,8 @@ import { TicketRaffleService } from "../tickets/ticket-raffle/ticket-raffle.serv
 import { generateRandomNumbers } from "../../utils/functions/generateNumbers";
 import { TicketQueueService } from "../tickets/ticket-queue/ticket-queue.service";
 import { CreateTicketQueuePrizedDto } from "../tickets/ticket-queue/dto/create-ticket-queue-prized.dto";
+import { PutUpdateRaffleEditionDto } from "./dto/put-update-raffle-edition.dto";
+import { PatchUpdateRaffleEditionDto } from "./dto/patch-update-raffle-edition.dto";
 
 @Injectable()
 export class RaffleEditionService {
@@ -70,13 +72,28 @@ export class RaffleEditionService {
         return raffleEdition
     }
 
-    async update(id: string, data: any) { }
-    async delete(id: string) { }
-    async exists(id: string) {
-        // if (await this.findById(id)) {
-        //       return true;
-        //     }
+    async update(id: string, data: PutUpdateRaffleEditionDto | PatchUpdateRaffleEditionDto) {
+        if (!this.exists(id)) {
+            throw new NotFoundException('Rifa nao encontrada');
+        }
 
-        //     return false;
+        return this.prisma.raffleEdition.update({
+            where: { id },
+            data,
+        })
+    }
+    async delete(id: string) {
+        if (!(await this.exists(id))) {
+            throw new NotFoundException('Rifa nao encontrada');
+        }
+        await this.prisma.raffleEdition.delete({ where: { id } });
+    }
+
+    async exists(id: string) {
+        if (await this.findById(id)) {
+            return true;
+        }
+
+        return false;
     }
 }
