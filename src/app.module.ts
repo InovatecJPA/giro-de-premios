@@ -15,6 +15,7 @@ import { TicketQueueModule } from './raffle/tickets/ticket-queue/ticket-queue.mo
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
+import { WithdrawalRequestModule } from './user/extract/withdrawal-request/withdrawal-request.module';
 
 
 
@@ -41,6 +42,7 @@ import { ExpressAdapter } from '@bull-board/express';
     PrizeModule,
     ExtractModule,
     TicketQueueModule,
+    WithdrawalRequestModule
   ],
   controllers: [AppController],
   providers: [AppService],

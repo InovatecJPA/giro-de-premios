@@ -60,7 +60,10 @@ export class TicketPaymentService {
             discount = new Decimal(discountRule.discount_value)
         }
 
-        const totalValue = discount.times(new Decimal(buyingTicketsData.ticket_amount).times(new Decimal(edition.price)))
+        const totalValue = new Decimal(buyingTicketsData.ticket_amount)
+            .times(new Decimal(edition.price))
+            .times(new Decimal(1)
+                .minus(discount))
 
 
         //Cria transação no banco

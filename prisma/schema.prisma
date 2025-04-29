@@ -37,6 +37,12 @@ enum ExtractType {
   withdrawal
 }
 
+enum WithdrawalRequestType {
+  pending
+  approved
+  rejected
+}
+
 model User {
   id           String   @id @default(uuid())
   name         String
@@ -53,9 +59,10 @@ model User {
   owner     User?  @relation("UserOwnerSub", fields: [owner_id], references: [id])
   sub_users User[] @relation("UserOwnerSub")
 
-  auths           Auth[]
-  raffle_editions RaffleEdition[]
-  Extract         Extract[]
+  auths             Auth[]
+  raffle_editions   RaffleEdition[]
+  Extract           Extract[]
+  WithdrawalRequest WithdrawalRequest[]
 
   @@map("users")
 }
@@ -167,6 +174,19 @@ model Extract {
   user           User           @relation(fields: [user_id], references: [id])
 
   @@map("extracts")
+}
+
+model WithdrawalRequest {
+  id            String                @id @default(uuid())
+  amount        Decimal               @db.Decimal(10, 2)
+  status        WithdrawalRequestType @default(pending)
+  request_date  DateTime              @default(now())
+  approval_date DateTime              @updatedAt
+  user_id       String
+
+  User User @relation(fields: [user_id], references: [id])
+
+  @@map("withdrawal_request")
 }
 
 model DiscountRule {

@@ -7,7 +7,7 @@ Content-Type: application/json
     "email": "john@example.com",
     "number": "11999999999",
     "ticket_amount": 500,
-    "raffle_edition_id": "dcb5dcaf-baa5-49d8-ad4a-80c599473f06"
+    "raffle_edition_id": "abcfea60-589d-4895-88e1-135db9689097"
 }
 ###
 GET http://localhost:3000/ticket-queue/clear
@@ -25,7 +25,7 @@ Content-Type: application/json
   "raffle_draw_date": "2022-12-25T00:00:00.000Z",
   "prizes": [
     {
-      "quantity": 100000,
+      "quantity": 1000,
       "prize_id": "f22476ef-ecc2-433a-a176-1d6db6668205"
     }
   ]
