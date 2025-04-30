@@ -71,13 +71,13 @@ export class TicketPaymentService {
                 .minus(discount))
 
 
-        //Cria transação no banco
+        // Cria transação no banco 
+        // Está faltando
         // await this.transactionService.create(createTransactionDto);
-        //--> Logica de extrato
-        //--> await this.extratoService.deposit(depositData);
-        //----> Atualizar saldo
 
-        // Monta os dados base para pagamento e enfileiramento
+        //--> Logica de extrato já esta implementada
+        //--> await this.extratoService.deposit(depositData);
+
         const baseTicketData = {
             ...buyingTicketsData,
             discount: discount.toString(),

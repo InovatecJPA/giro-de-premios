@@ -1,5 +1,3 @@
-Criar tabela de vencedores ou alguma maneira para facilitar o pagamento dos usuarios/notificar o sistema
-
 Faltando recuperar senha
 
 Verificar login com google
