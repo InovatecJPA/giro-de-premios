@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 import { CreateWithdrawalRequestDTO } from './dto/create-withdrawal-request.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { ExtractType, WithdrawalRequestType } from '../../../prisma/generated/prisma/client';
+import { ExtractType, PaymentStatus } from '../../../prisma/generated/prisma/client';
 import { PaginationOptions } from '../../../utils/types/pagination.types';
 import { plainToInstance } from 'class-transformer';
 import { ResponseDepositExtractDto } from '../dto/response-deposit-extract.dto';
@@ -15,7 +15,7 @@ export class WithdrawalRequestService {
         const withdrawalOnGoing = await this.prisma.withdrawalRequest.findFirst({
             where: {
                 user_id: createWithdrawalRequestDTO.user_id,
-                status: WithdrawalRequestType.pending
+                status: PaymentStatus.pending
             }
         })
 
@@ -59,7 +59,7 @@ export class WithdrawalRequestService {
     async rejectWithdrawal(id: string) {
         await this.prisma.withdrawalRequest.update({
             where: { id },
-            data: { status: WithdrawalRequestType.rejected },
+            data: { status: PaymentStatus.rejected },
         });
     }
 
@@ -67,7 +67,7 @@ export class WithdrawalRequestService {
         await this.prisma.$transaction(async (tx) => {
             const withdrawal = await tx.withdrawalRequest.update({
                 where: { id },
-                data: { status: WithdrawalRequestType.approved },
+                data: { status: PaymentStatus.paid },
             });
 
             await tx.user.update({

@@ -4,8 +4,6 @@ Faltando recuperar senha
 
 Verificar login com google
 
-Sorteio do ticket no final da edição
-
 Implementar Testes de integração
 
 --------------------------------------------

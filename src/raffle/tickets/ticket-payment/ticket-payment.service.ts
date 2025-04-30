@@ -8,6 +8,7 @@ import { RaffleEditionService } from "../../raffle-edition/raffle-edition.servic
 import { TicketQueueService } from "../ticket-queue/ticket-queue.service";
 import { Decimal } from "@prisma/client/runtime/library";
 import { DiscountRuleService } from "../../discount-rule/discount-rule.service";
+import { create } from "node:domain";
 
 @Injectable()
 export class TicketPaymentService {
@@ -76,21 +77,26 @@ export class TicketPaymentService {
         //--> await this.extratoService.deposit(depositData);
         //----> Atualizar saldo
 
-        const createQueueTicketData = {
+        // Monta os dados base para pagamento e enfileiramento
+        const baseTicketData = {
             ...buyingTicketsData,
             discount: discount.toString(),
             total_value: totalValue.toString(),
-        }
+        };
 
-        const { raffle_edition_id, ...createTicketPaymentDto } = createQueueTicketData;
+        const { raffle_edition_id, ...ticketPaymentData } = baseTicketData;
 
         const ticketPayment = await this.prisma.ticketPayment.create({
-            data: createTicketPaymentDto,
+            data: ticketPaymentData,
         });
 
-        this.ticketQueueService.queueTicketPurchase(createQueueTicketData);
+        await this.ticketQueueService.queueTicketPurchase({
+            ...baseTicketData,
+            ticket_payment_id: ticketPayment.id,
+        });
 
-        return ticketPayment
+        return ticketPayment;
+
     }
 
 }

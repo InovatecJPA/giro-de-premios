@@ -1,0 +1,55 @@
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { WinnerPaymentService } from './winner-payment.service';
+import { CreateWinnerPaymentDto } from './dto/create-winner-payment.dto';
+import { UpdateStatusSuccessWinnerPaymentDto } from './dto/update-status-success-winner-payment.dto';
+import { plainToInstance } from 'class-transformer';
+import { ResponseWinnerPaymentDto } from './dto/response-winner-payment.dto';
+import { PaymentStatus } from '../../../../prisma/generated/prisma/client';
+
+@Controller('winner-payment')
+export class WinnerPaymentController {
+    constructor(private readonly winnerPaymentService: WinnerPaymentService) { }
+
+    @Post()
+    async create(@Body() createWinnerPaymentDto: CreateWinnerPaymentDto) {
+        return await this.winnerPaymentService.create(createWinnerPaymentDto);
+    }
+
+    @Get()
+    async findAll(@Query('page') skip = 1, @Query('limit') take = 10) {
+        return await this.winnerPaymentService.findAll({ skip, take });
+    }
+
+    @Get(':id')
+    async findById(@Param('id') id: string) {
+        return await this.winnerPaymentService.findById(id);
+    }
+
+    @Patch(':id')
+    async update(@Param('id') id: string, @Body() data: Partial<CreateWinnerPaymentDto>) {
+        return await this.winnerPaymentService.update(id, data);
+    }
+
+    @Patch(':id/update-status')
+    async updateStatus(@Param('id') id: string, @Query('status') newStatus: boolean, @Body() data: { payment_date: Date }) {
+        const status = newStatus ? PaymentStatus.paid : PaymentStatus.failed
+
+        if (!status) {
+            await this.winnerPaymentService.updateStatusFailed(id);
+            return
+        } else {
+
+            const updateData = {
+                status,
+                payment_date: data.payment_date
+            }
+
+            await this.winnerPaymentService.updateStatusApproved(id, updateData);
+        }
+    }
+
+    @Delete(':id')
+    async delete(@Param('id') id: string) {
+        return await this.winnerPaymentService.delete(id);
+    }
+}

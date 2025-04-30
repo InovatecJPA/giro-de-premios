@@ -1,4 +1,4 @@
-import { IsNumberString, IsString } from 'class-validator';
+import { IsNumberString } from 'class-validator';
 
 export class PatchAddFinalPrizeDto {
 

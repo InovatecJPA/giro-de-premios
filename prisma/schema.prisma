@@ -37,10 +37,11 @@ enum ExtractType {
   withdrawal
 }
 
-enum WithdrawalRequestType {
+enum PaymentStatus {
   pending
-  approved
   rejected
+  paid
+  failed
 }
 
 model User {
@@ -145,6 +146,7 @@ model TicketRaffle {
   prize          Prize?          @relation(fields: [prize_id], references: [id])
   raffle_edition RaffleEdition   @relation(fields: [raffle_edition_id], references: [id])
   ticket_payment TicketPayment[] @relation("raffle_ticket_payments")
+  WinnerPayment  WinnerPayment[]
 
   @@unique([ticket_raffle_number, raffle_edition_id])
   @@map("ticket_raffles")
@@ -161,10 +163,26 @@ model TicketPayment {
   total_value   Decimal  @db.Decimal(10, 2)
   created_at    DateTime @default(now())
 
-  ticket_raffle TicketRaffle[] @relation("raffle_ticket_payments")
+  ticket_raffle TicketRaffle[]  @relation("raffle_ticket_payments")
   Extract       Extract[]
+  WinnerPayment WinnerPayment[]
 
   @@map("ticket_payments")
+}
+
+model WinnerPayment {
+  id                String        @id @default(uuid())
+  ticket_raffle_id  String
+  ticket_payment_id String
+  status            PaymentStatus @default(pending)
+  payment_date      DateTime?
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+
+  ticket_raffle  TicketRaffle  @relation(fields: [ticket_raffle_id], references: [id])
+  ticket_payment TicketPayment @relation(fields: [ticket_payment_id], references: [id])
+
+  @@map("winner_payments")
 }
 
 model Extract {
@@ -183,11 +201,11 @@ model Extract {
 }
 
 model WithdrawalRequest {
-  id            String                @id @default(uuid())
-  amount        Decimal               @db.Decimal(10, 2)
-  status        WithdrawalRequestType @default(pending)
-  request_date  DateTime              @default(now())
-  approval_date DateTime              @updatedAt
+  id            String        @id @default(uuid())
+  amount        Decimal       @db.Decimal(10, 2)
+  status        PaymentStatus @default(pending)
+  request_date  DateTime      @default(now())
+  approval_date DateTime      @updatedAt
   user_id       String
 
   User User @relation(fields: [user_id], references: [id])

@@ -7,6 +7,7 @@ import { generateRandomNumbers } from "../../../utils/functions/generateNumbers"
 import { CreateBodyTicketQueueDto } from "./dto/create-body-ticket-payment.dto";
 import { CreateTicketRaffleDto } from "../ticket-raffle/dto/create-ticket-raffle.dto";
 import { CreateTicketQueuePrizedDto } from "./dto/create-ticket-queue-prized.dto";
+import { PaymentStatus, TicketRaffleStatus } from "../../../prisma/generated/prisma/client";
 
 @Processor('ticket-purchase')
 export class TicketQueueProcessor {
@@ -65,11 +66,37 @@ export class TicketQueueProcessor {
                     data.raffle_edition_id,
                     tx
                 )
+                const remainingWinningTickets = await this.ticketRaffleService.findAllByRaffleEditionWithPrizeAvailable(
+                    data.raffle_edition_id
+                )
+
                 const usedNumbers = raffles.map(raffle => Number(raffle.ticket_raffle_number))
 
                 const generatedNumbers = generateRandomNumbers(data.ticket_amount, usedNumbers)
-
                 const bigIntNumbers = generatedNumbers.map(n => BigInt(n));
+
+
+                const winningTicketsDrawn = remainingWinningTickets.filter(ticket =>
+                    bigIntNumbers.some(n => n === ticket.ticket_raffle_number)
+                );
+
+                await Promise.all(
+                    winningTicketsDrawn.map(async (ticket) => {
+                        const updatedTicket = await this.prisma.ticketRaffle.update({
+                            where: { id: ticket.id },
+                            data: { status: TicketRaffleStatus.bought }
+                        });
+
+                        return this.prisma.winnerPayment.create({
+                            data: {
+                                ticket_raffle_id: updatedTicket.id,
+                                ticket_payment_id: data.ticket_payment_id,
+                            }
+                        });
+                    })
+                );
+
+
 
                 await this.ticketRaffleService.reserveTickets(
                     data.raffle_edition_id,

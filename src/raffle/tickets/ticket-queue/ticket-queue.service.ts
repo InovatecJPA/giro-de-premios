@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { Job, Queue } from "bull";
 import { CreateTicketPaymentDto } from "../ticket-payment/dto/create-ticket-paymento.dto";
 import { CreateTicketQueuePrizedDto } from "./dto/create-ticket-queue-prized.dto";
+import { CreateBodyTicketQueueDto } from "./dto/create-body-ticket-payment.dto";
 
 
 
@@ -17,7 +18,7 @@ export class TicketQueueService {
     }
 
 
-    async queueTicketPurchase(data: CreateTicketPaymentDto) {
+    async queueTicketPurchase(data: CreateBodyTicketQueueDto) {
         const jobIdPrefix = `purchase-${Date.now()}-${data.cpf.substring(5)}`;
 
         const chunkSize = 1000;

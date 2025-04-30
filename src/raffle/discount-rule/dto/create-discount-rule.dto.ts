@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsPositive,
   IsUUID,
+  Max,
   Min,
 } from 'class-validator';
 
@@ -17,6 +18,7 @@ export class CreateDiscountRuleDto {
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
+  @Max(1)
   discount_value: number;
 
   @IsUUID()
