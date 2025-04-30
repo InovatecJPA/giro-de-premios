@@ -1,5 +1,6 @@
+import { Decimal } from '@prisma/client/runtime/library';
 import { Transform } from 'class-transformer';
-import { IsString, IsOptional, IsEnum, IsInt, Min, IsDateString, IsUUID, IsDecimal, Validate, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsInt, Min, IsDateString, IsUUID, IsDecimal, Validate, ValidateNested, IsNumberString } from 'class-validator';
 import { RaffleEditionStatus } from 'src/prisma/generated/prisma/client';
 
 export class CreateRaffleEditionDto {
@@ -13,6 +14,9 @@ export class CreateRaffleEditionDto {
   @IsEnum(RaffleEditionStatus)
   status?: RaffleEditionStatus
 
+  @IsUUID('4')
+  prize_id: string;
+
   @IsOptional()
   @IsInt()
   @Min(1)
@@ -20,7 +24,10 @@ export class CreateRaffleEditionDto {
 
   @IsDecimal({ decimal_digits: '2' })
   @Transform(({ value }) => (value.toString()))
-  price: string;
+  price: Decimal;
+
+  @IsNumberString()
+  winner_ticket_drawn: bigint;
 
   @IsDateString()
   raffle_draw_date: string;
@@ -30,4 +37,3 @@ export class CreateRaffleEditionDto {
   user_id?: string | null
 
 }
-

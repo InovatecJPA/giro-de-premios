@@ -54,6 +54,7 @@ export class RaffleEditionService {
         const superData = {
             ...dataEdition,
             winner_tickets: totalPrizeTickets,
+            winner_ticket_drawn: BigInt(dataEdition.winner_ticket_drawn),
             price: new Decimal(dataEdition.price),
         }
 
@@ -79,9 +80,10 @@ export class RaffleEditionService {
 
         return this.prisma.raffleEdition.update({
             where: { id },
-            data,
+            data: data,
         })
     }
+
     async delete(id: string) {
         if (!(await this.exists(id))) {
             throw new NotFoundException('Rifa nao encontrada');
@@ -95,5 +97,13 @@ export class RaffleEditionService {
         }
 
         return false;
+    }
+
+    async addFinalPrize(id: string, ticket_number: bigint) {
+        if (!(await this.exists(id))) {
+            throw new NotFoundException('Rifa nao encontrada');
+        }
+
+        await this.update(id, { winner_ticket_drawn: ticket_number, status: 'closed' })
     }
 }

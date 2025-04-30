@@ -54,6 +54,10 @@ export class TicketPaymentService {
             throw new NotFoundException('Raffle edition not found');
         }
 
+        if (edition.status === 'closed') {
+            throw new NotFoundException('Rifa Finalizada');
+        }
+
         const discountRule = await this.discountRuleService.findByHighestDiscountAvailableByTicketAmount(buyingTicketsData.ticket_amount)
 
         if (discountRule) {

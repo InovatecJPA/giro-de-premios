@@ -42,7 +42,7 @@ import { WithdrawalRequestModule } from './user/extract/withdrawal-request/withd
     PrizeModule,
     ExtractModule,
     TicketQueueModule,
-    WithdrawalRequestModule
+    WithdrawalRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,0 +1,22 @@
+Criar tabela de vencedores ou alguma maneira para facilitar o pagamento dos usuarios/notificar o sistema
+
+Faltando recuperar senha
+
+Verificar login com google
+
+Sorteio do ticket no final da edição
+
+Implementar Testes de integração
+
+--------------------------------------------
+
+Pagamento - Jose Carlos//
+
+Comprar ticket -> att pagamento/transacao (Webhook para extract deposit)
+
+-------------------------------------------
+
+Ver se é necessário - > 
+Adicionar Worker/Separar logica de gerencia//Depois
+
+Apagar tickets quando finalizar edição/ Mover para outra tabela de histórico, pode ser mais lenta

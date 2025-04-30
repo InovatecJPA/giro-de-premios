@@ -17,6 +17,7 @@ import { PutUpdateRaffleEditionDto } from './dto/put-update-raffle-edition.dto';
 import { ResponseRaffleEditionDto } from './dto/response-raffle-edition.dto';
 import { plainToInstance } from 'class-transformer';
 import { CreateBodyRaffleEditionDto } from './dto/create-raffle-edition-body.dto';
+import { PatchAddFinalPrizeDto } from './dto/patch-add-final-prize.dto';
 
 @Controller('raffle-editions')
 export class RaffleEditionController {
@@ -88,6 +89,18 @@ export class RaffleEditionController {
 
       const raffleEditionResponse = plainToInstance(ResponseRaffleEditionDto, updated);
       return { data: { raffleEditionResponse } };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Patch(':id/add-final-prize')
+  async addFinalPrize(@Param('id') id: string, @Body() data: PatchAddFinalPrizeDto) {
+    try {
+      const { ticket_number } = data
+
+      await this.raffleEditionService.addFinalPrize(id, ticket_number);
+      return
     } catch (error) {
       throw error;
     }

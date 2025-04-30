@@ -1,7 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthLoginDto } from "./dto/auth-login.dto";
 import { IsPublic } from "../decorators/is-public-validator.decorator";
+import { plainToInstance } from "class-transformer";
+import { AuthResponseDto } from "./dto/auth-response.dto";
+import { AuthResetDto } from "./dto/auth-reset.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +27,11 @@ export class AuthController {
 
     @Get(':id')
     async findById(@Param('id') id: string) {
-        return await this.authService.findById(id)
+        const auth = await this.authService.findById(id)
+
+        const authResponseDto = plainToInstance(AuthResponseDto, auth);
+
+        return { data: { authResponseDto } }
     }
 
     @Get('user/:userId')
@@ -35,7 +42,11 @@ export class AuthController {
 
     @Get('provider/:provider/provider-user/:providerUserId')
     async findByProviderAndProviderUserId(@Param('providerUserId') providerUserId: string, @Param('provider') provider: string) {
-        return await this.authService.findByProviderAndProviderUserId(providerUserId, provider);
+        const auth = await this.authService.findByProviderAndProviderUserId(providerUserId, provider);
+
+        const authResponseDto = plainToInstance(AuthResponseDto, auth);
+
+        return { data: { authResponseDto } }
     }
 
     @Get('email/:email')
@@ -49,5 +60,11 @@ export class AuthController {
         return await this.authService.login(data);
     }
 
+    @HttpCode(204)
+    @Patch('reset-password')
+    async resetPassword(@Param('id') id: string, @Body() data: AuthResetDto) {
+        const { old_password, new_password } = data
 
+        await this.authService.resetPassword(id, old_password, new_password);
+    }
 }

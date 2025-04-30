@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -12,7 +13,6 @@ import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { PaginationOptions } from '../utils/types/pagination.types';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { Prisma } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 
 export type JwtAuthPayload = {
@@ -83,7 +83,7 @@ export class AuthService {
     };
   }
 
-  async findById(id: string): Promise<AuthResponseDto | null> {
+  async findById(id: string) {
     return await this.prisma.auth.findUnique({
       where: { id },
       select: {
@@ -94,7 +94,7 @@ export class AuthService {
         user_id: true,
         created_at: true,
         updated_at: true,
-        password_hash: false,
+        password_hash: true,
       },
     });
   }
@@ -174,15 +174,17 @@ export class AuthService {
 
     const emailExists = await this.findByEmail(data.provider_user_id);
 
-    if (emailExists) {
-      if (emailExists.provider === 'email') {
-        if (!emailExists.is_verified)
-          throw new BadRequestException(
-            'Email já cadastrado não verificado, verifique a conta e tente novamente ou entre em contato com o suporte',
-          );
+    if (emailExists.length > 0) {
+      emailExists.forEach((item) => {
+        if (item.provider === 'email') {
+          if (!item.is_verified) {
 
-        data.user_id = emailExists.user_id;
-      }
+            throw new BadRequestException(
+              'Email já cadastrado não verificado, verifique a conta e tente novamente ou entre em contato com o suporte',);
+          }
+          data.user_id = item.user_id;
+        }
+      })
     }
 
     const auth = await db.auth.create({
@@ -198,8 +200,10 @@ export class AuthService {
   ) {
     const auth = await this.prisma.auth.findUnique({
       where: {
-        provider_user_id,
-        provider,
+        provider_user_id_provider: {
+          provider_user_id,
+          provider,
+        }
       },
       include: { User: true },
     });
@@ -208,7 +212,7 @@ export class AuthService {
   }
 
   async findByEmail(email: string) {
-    const auth = await this.prisma.auth.findUnique({
+    const auth = await this.prisma.auth.findMany({
       where: {
         provider_user_id: email,
       },
@@ -218,13 +222,11 @@ export class AuthService {
   }
 
   async login(data: AuthLoginDto) {
-    const auth = await this.prisma.auth.findUnique({
-      where: {
-        provider_user_id: data.provider_user_id,
-        provider: data.provider,
-      },
-      include: { User: true },
-    });
+    const auth = await this.findByProviderAndProviderUserId(
+      data.provider_user_id,
+      data.provider,
+    )
+
 
     if (!auth) {
       throw new UnauthorizedException('Credenciais inválidas');
@@ -243,12 +245,20 @@ export class AuthService {
     return await bcrypt.compare(password, auth.password_hash);
   }
 
+  async resetPassword(id: string, oldPassword: string, newPassword: string) {
+    const auth = await this.findById(id);
 
+    if (!auth) throw new NotFoundException('Usuario nao encontrado');
 
+    if (!this.isPasswordValid(auth, oldPassword))
+      throw new UnauthorizedException('Credenciais inválidas');
+
+    return this.prisma.auth.update({
+      where: { id },
+      data: { password_hash: await bcrypt.hash(newPassword, 10) },
+    });
+  }
 
   //TODO
   async forgotPassword() { }
-
-  //TODO
-  async resetPassword() { }
 }
