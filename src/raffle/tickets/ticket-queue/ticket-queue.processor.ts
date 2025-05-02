@@ -8,6 +8,8 @@ import { CreateBodyTicketQueueDto } from "./dto/create-body-ticket-payment.dto";
 import { CreateTicketRaffleDto } from "../ticket-raffle/dto/create-ticket-raffle.dto";
 import { CreateTicketQueuePrizedDto } from "./dto/create-ticket-queue-prized.dto";
 import { PaymentStatus, TicketRaffleStatus } from "../../../prisma/generated/prisma/client";
+import { SendEmailTicketPurchaseDto } from "./dto/send-email-ticket-purchase.dto";
+import { MailService } from "../../../mail/mail.service";
 
 @Processor('ticket-purchase')
 export class TicketQueueProcessor {
@@ -15,6 +17,7 @@ export class TicketQueueProcessor {
 
     constructor(
         private ticketRaffleService: TicketRaffleService,
+        private mailService: MailService,
         private prisma: PrismaService
     ) { }
 
@@ -129,5 +132,47 @@ export class TicketQueueProcessor {
         }
     }
 
+    @Process({
+        name: 'send-email-ticket-purchase',
+        concurrency: 1
+    })
+    async processSendEmailTicketPurchase(job: Job<SendEmailTicketPurchaseDto>) {
+        const data = job.data
+        try {
+
+
+            const payment = await this.prisma.ticketPayment.findUnique({
+                where: { id: job.data.ticket_payment_id },
+                include: { ticket_raffle: true }
+            })
+
+            if (!payment) throw new Error('Payment not found')
+
+            const context = {
+                username: payment.name,
+                raffleEditionTitle: data.raffle_edition_title,
+                ticketRaffles: payment.ticket_raffle.map(ticketRaffle => ({
+                    ticketRaffleNumber: ticketRaffle.ticket_raffle_number.toString()
+                })),
+                supportEmail: process.env.SUPPORT_EMAIL,
+                siteName: process.env.SITE_NAME,
+            }
+
+            await this.mailService.sendMail({
+                to: payment.email,
+                subject: 'Compra realizada com sucesso!',
+                template: 'purchased-tickets',
+                context,
+            })
+
+            this.logger.log(`Ticket email sent successfully to ${payment.email}`);
+        } catch (error) {
+            this.logger.error(`Failed to send ticket email: ${error.message}`, {
+                paymentId: data.ticket_payment_id,
+                error: error.stack
+            });
+            throw error;
+        }
+    }
 
 }

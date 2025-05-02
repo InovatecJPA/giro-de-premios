@@ -93,6 +93,7 @@ export class TicketPaymentService {
         await this.ticketQueueService.queueTicketPurchase({
             ...baseTicketData,
             ticket_payment_id: ticketPayment.id,
+            raffle_edition_title: edition.title
         });
 
         return ticketPayment;

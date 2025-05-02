@@ -1,7 +1,6 @@
 import { InjectQueue } from "@nestjs/bull";
 import { Injectable } from "@nestjs/common";
 import { Job, Queue } from "bull";
-import { CreateTicketPaymentDto } from "../ticket-payment/dto/create-ticket-paymento.dto";
 import { CreateTicketQueuePrizedDto } from "./dto/create-ticket-queue-prized.dto";
 import { CreateBodyTicketQueueDto } from "./dto/create-body-ticket-payment.dto";
 
@@ -24,13 +23,25 @@ export class TicketQueueService {
         const chunkSize = 1000;
         const jobs: Job<any>[] = [];
 
+        const emailJobId = `${jobIdPrefix}-email`;
+        await this.ticketPurchaseQueue.add('send-email-ticket-purchase', {
+            ticket_payment_id: data.ticket_payment_id,
+            raffle_edition_title: data.raffle_edition_title
+        }, {
+            jobId: emailJobId,
+            removeOnComplete: true,
+            delay: 1000 * 60 * 5,
+            attempts: 3,
+        });
+
         if (data.ticket_amount > chunkSize) {
             const chunks = Math.ceil(data.ticket_amount / chunkSize);
 
             for (let i = 0; i < chunks; i++) {
                 const chunkData = {
                     ...data,
-                    ticket_amount: chunkSize
+                    ticket_amount: chunkSize,
+                    parent_job_id: emailJobId
                 };
 
                 if (i === chunks - 1) {
@@ -55,7 +66,10 @@ export class TicketQueueService {
         } else {
             const jobId = `${jobIdPrefix}-1`;
 
-            const job = await this.ticketPurchaseQueue.add('buy-tickets', data, {
+            const job = await this.ticketPurchaseQueue.add('buy-tickets', {
+                ...data,
+                parent_job_id: emailJobId
+            }, {
                 jobId,
                 timeout: 30000,
                 removeOnComplete: true,
@@ -204,4 +218,5 @@ export class TicketQueueService {
         }
         return { status: job.failedReason ? 'failed' : 'processing' }
     }
+
 }

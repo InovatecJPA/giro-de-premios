@@ -2,7 +2,7 @@ Faltando recuperar senha
 
 Verificar login com google
 
-Endpoint de verificar o email
+Criar templates de email
 
 Implementar testes de integração
 --------------------------------------------
