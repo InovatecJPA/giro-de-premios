@@ -5,11 +5,12 @@ import { ResponseForgotPasswordDTO } from "./dto/response-forgot-password.dto";
 import { plainToInstance } from "class-transformer";
 import { CreateForgotPasswordDto } from "./dto/create-forgot-password.dto";
 import { randomBytes } from "node:crypto";
+import { MailService } from "../../mail/mail.service";
 
 @Injectable()
 export default class ForgotPasswordService {
     constructor(
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
     ) { }
 
     async findAll(paginationOptions: PaginationOptions) {
@@ -48,15 +49,32 @@ export default class ForgotPasswordService {
     }
 
     async create(data: CreateForgotPasswordDto) {
+        let tokenExists = true;
+        let password_reset_token = '';
+
+        while (tokenExists) {
+            password_reset_token = randomBytes(32).toString('hex');
+
+            const auth = await this.findByToken(password_reset_token);
+            tokenExists = !!auth;
+        }
 
         const dataForgotPassword = {
             ...data,
-            password_reset_token: randomBytes(32).toString('hex'),
-            password_reset_token_expires: new Date(Date.now() + 60 * 60 * 1000),
+            password_reset_token: password_reset_token,
+            password_reset_token_expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }
+
 
         return this.prisma.forgotPasswordToken.create({
             data: { ...dataForgotPassword }
         })
     }
+
+    async isTokenValid(forgotPassword: any) {
+        if (!forgotPassword.password_reset_token_expires) return false;
+        return forgotPassword.password_reset_token_expires > new Date();
+    }
+
+
 }

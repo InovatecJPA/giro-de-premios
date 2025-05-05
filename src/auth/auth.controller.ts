@@ -73,4 +73,18 @@ export class AuthController {
 
         await this.authService.resetPassword(id, old_password, new_password);
     }
+
+    @IsPublic()
+    @Post('forgot-password')
+    @HttpCode(204)
+    async forgotPassword(@Body() data: { email: string }) {
+        return await this.authService.forgotPassword(data.email);
+    }
+
+    @IsPublic()
+    @Post('change-forgot-password')
+    async resetForgotPassword(@Query('token') token: string, @Body() data: { new_password: string }) {
+        return await this.authService.resetForgotPassword(token, data.new_password);
+    }
+
 }

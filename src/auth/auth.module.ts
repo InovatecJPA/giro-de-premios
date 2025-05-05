@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 import { MailModule } from '../mail/mail.module';
+import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MailModule } from '../mail/mail.module';
     }),
     PrismaModule,
     MailModule,
+    ForgotPasswordModule,
   ],
   providers: [
     AuthService,

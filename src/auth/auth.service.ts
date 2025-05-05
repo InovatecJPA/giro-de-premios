@@ -16,6 +16,7 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { EmailOptions, MailService } from '../mail/mail.service';
 import { randomBytes } from 'crypto';
+import ForgotPasswordService from './forgot-password/forgot-password.service';
 
 export type JwtAuthPayload = {
   sub: string;
@@ -28,6 +29,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private mailService: MailService,
+    private forgotPasswordService: ForgotPasswordService,
     private prisma: PrismaService,
   ) { }
   async findAll(paginationOptions: PaginationOptions) {
@@ -154,12 +156,10 @@ export class AuthService {
     }
 
     let activation_token = '';
-    let expiration_date = new Date(Date.now() + 60 * 60 * 1000);
     let tokenExists = true;
 
     while (tokenExists) {
       activation_token = randomBytes(32).toString('hex');
-      expiration_date = new Date(Date.now() + 60 * 60 * 1000);
 
       const auth = await this.findByToken(activation_token);
       tokenExists = !!auth;
@@ -170,7 +170,7 @@ export class AuthService {
       ...data,
       password_hash: await bcrypt.hash(data.password, 10),
       activation_token,
-      expiration_date,
+      expiration_date: new Date(Date.now() + 24 * 60 * 60 * 1000),
       username: undefined,
       password: undefined,
     };
@@ -316,6 +316,43 @@ export class AuthService {
     });
   }
 
-  //TODO
-  async forgotPassword() { }
+  async forgotPassword(email: string) {
+    const auth = await this.findByProviderAndProviderUserId(email, 'email');
+
+    if (!auth) {
+      throw new BadRequestException('Email nao cadastrado');
+    }
+
+    const forgotPassword = await this.forgotPasswordService.create({ auth_id: auth.id });
+
+    const mailData: EmailOptions = {
+      to: email,
+      subject: 'Recuperação de senha',
+      template: 'forgot-password',
+      context: {
+        siteName: process.env.PROJECT_NAME,
+        forgotPasswordLink: process.env.FORGOT_PASSWORD_LINK + `?token=${forgotPassword.password_reset_token}`,
+        supportEmail: process.env.SUPPORT_EMAIL,
+      },
+    }
+
+    this.mailService.sendMail(mailData);
+  }
+
+  async resetForgotPassword(token: string, newPassword: string) {
+    const forgotPassword = await this.forgotPasswordService.findByToken(token);
+
+    if (!forgotPassword) {
+      throw new BadRequestException('Token inválido');
+    }
+
+    if (!this.forgotPasswordService.isTokenValid(forgotPassword)) {
+      throw new BadRequestException('Token invalido');
+    }
+
+    return this.prisma.auth.update({
+      where: { id: forgotPassword.auth_id },
+      data: { password_hash: await bcrypt.hash(newPassword, 10) },
+    });
+  }
 }
