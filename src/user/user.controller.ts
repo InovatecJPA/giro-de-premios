@@ -6,14 +6,12 @@ import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { PutUpdateUser } from './dto/put-update-user.dto';
 
 import { plainToInstance } from 'class-transformer';
-import { AuthService } from '../auth/auth.service';
 import { IsPublic } from '../decorators/is-public-validator.decorator';
 
 @Controller('users')
 export default class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService
   ) { }
 
   @Get()

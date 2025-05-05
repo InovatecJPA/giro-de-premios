@@ -14,6 +14,8 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { PaginationOptions } from '../utils/types/pagination.types';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { EmailOptions, MailService } from '../mail/mail.service';
+import { randomBytes } from 'crypto';
 
 export type JwtAuthPayload = {
   sub: string;
@@ -25,6 +27,7 @@ export type JwtAuthPayload = {
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    private mailService: MailService,
     private prisma: PrismaService,
   ) { }
   async findAll(paginationOptions: PaginationOptions) {
@@ -91,10 +94,13 @@ export class AuthService {
         provider: true,
         provider_user_id: true,
         is_verified: true,
+        activation_token: true,
+        expiration_date: true,
         user_id: true,
         created_at: true,
         updated_at: true,
         password_hash: true,
+
       },
     });
   }
@@ -147,15 +153,35 @@ export class AuthService {
       throw new ConflictException('Email já cadastrado');
     }
 
-    const dataWithoutPassword = {
+    const activation_token = randomBytes(16).toString('hex');
+    const expiration_date = new Date(Date.now() + 60 * 60 * 1000);
+
+    const dataWithoutPasswordAndUsername = {
       ...data,
       password_hash: await bcrypt.hash(data.password, 10),
+      activation_token,
+      expiration_date,
+      username: undefined,
       password: undefined,
     };
 
     const auth = await db.auth.create({
-      data: dataWithoutPassword,
+      data: dataWithoutPasswordAndUsername,
     });
+
+    const mailData: EmailOptions = {
+      to: data.provider_user_id,
+      subject: 'Confirmação de cadastro',
+      template: 'activation-account',
+      context: {
+        username: data.username,
+        siteName: process.env.PROJECT_NAME,
+        activationLink: process.env.ACTIVATION_LINK + `?token=${activation_token}`,
+        supportEmail: process.env.SUPPORT_EMAIL,
+      },
+    }
+
+    this.mailService.sendMail(mailData);
 
     return auth;
   }
@@ -221,6 +247,14 @@ export class AuthService {
     return auth;
   }
 
+  async findByToken(token: string) {
+    return this.prisma.auth.findUnique({
+      where: {
+        activation_token: token,
+      }
+    });
+  }
+
   async login(data: AuthLoginDto) {
     const auth = await this.findByProviderAndProviderUserId(
       data.provider_user_id,
@@ -256,6 +290,19 @@ export class AuthService {
     return this.prisma.auth.update({
       where: { id },
       data: { password_hash: await bcrypt.hash(newPassword, 10) },
+    });
+  }
+
+  async activate(token: string) {
+    const auth = await this.findByToken(token);
+
+    if (!auth) {
+      throw new BadRequestException('Token inválido');
+    }
+
+    return this.prisma.auth.update({
+      where: { id: auth.id },
+      data: { is_verified: true },
     });
   }
 

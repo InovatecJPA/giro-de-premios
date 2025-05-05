@@ -100,6 +100,7 @@ export class UserService {
 
       const credentialsPayload = {
         ...credentials,
+        username: user.name,
         user_id: user.id,
       };
 

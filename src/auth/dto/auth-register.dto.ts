@@ -4,4 +4,7 @@ import { AuthLoginDto } from './auth-login.dto';
 export class AuthRegisterDto extends AuthLoginDto {
   @IsUUID('4')
   user_id: string
+
+  @IsString()
+  username: string
 }

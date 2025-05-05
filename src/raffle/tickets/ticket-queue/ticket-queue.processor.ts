@@ -9,7 +9,7 @@ import { CreateTicketRaffleDto } from "../ticket-raffle/dto/create-ticket-raffle
 import { CreateTicketQueuePrizedDto } from "./dto/create-ticket-queue-prized.dto";
 import { PaymentStatus, TicketRaffleStatus } from "../../../prisma/generated/prisma/client";
 import { SendEmailTicketPurchaseDto } from "./dto/send-email-ticket-purchase.dto";
-import { MailService } from "../../../mail/mail.service";
+import { EmailOptions, MailService } from "../../../mail/mail.service";
 
 @Processor('ticket-purchase')
 export class TicketQueueProcessor {
@@ -148,22 +148,22 @@ export class TicketQueueProcessor {
 
             if (!payment) throw new Error('Payment not found')
 
-            const context = {
-                username: payment.name,
-                raffleEditionTitle: data.raffle_edition_title,
-                ticketRaffles: payment.ticket_raffle.map(ticketRaffle => ({
-                    ticketRaffleNumber: ticketRaffle.ticket_raffle_number.toString()
-                })),
-                supportEmail: process.env.SUPPORT_EMAIL,
-                siteName: process.env.SITE_NAME,
-            }
-
-            await this.mailService.sendMail({
+            const mailOptions: EmailOptions = {
                 to: payment.email,
                 subject: 'Compra realizada com sucesso!',
                 template: 'purchased-tickets',
-                context,
-            })
+                context: {
+                    username: payment.name,
+                    raffleEditionTitle: data.raffle_edition_title,
+                    ticketRaffles: payment.ticket_raffle.map(ticketRaffle => ({
+                        ticketRaffleNumber: ticketRaffle.ticket_raffle_number.toString()
+                    })),
+                    supportEmail: process.env.SUPPORT_EMAIL,
+                    siteName: process.env.PROJECT_NAME,
+                }
+            }
+
+            await this.mailService.sendMail(mailOptions)
 
             this.logger.log(`Ticket email sent successfully to ${payment.email}`);
         } catch (error) {

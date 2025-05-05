@@ -60,6 +60,12 @@ export class AuthController {
         return await this.authService.login(data);
     }
 
+    @IsPublic()
+    @Post('activate')
+    async activate(@Query('token') token: string) {
+        return await this.authService.activate(token);
+    }
+
     @HttpCode(204)
     @Patch('reset-password')
     async resetPassword(@Param('id') id: string, @Body() data: AuthResetDto) {
