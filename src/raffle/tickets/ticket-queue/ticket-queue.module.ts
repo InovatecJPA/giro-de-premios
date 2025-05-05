@@ -7,7 +7,7 @@ import { TicketQueueProcessor } from "./ticket-queue.processor";
 import { DiscountRuleModule } from "../../discount-rule/discount-rule.module";
 import { BullBoardModule } from "@bull-board/nestjs";
 import { BullAdapter } from "@bull-board/api/bullAdapter";
-import { MailService } from "../../../mail/mail.service";
+import { MailModule } from "../../../mail/mail.module";
 
 @Module({
     imports: [
@@ -20,7 +20,7 @@ import { MailService } from "../../../mail/mail.service";
         }),
         TicketRaffleModule,
         DiscountRuleModule,
-        MailService
+        MailModule,
     ],
     controllers: [],
     providers: [

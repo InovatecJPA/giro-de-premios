@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -14,8 +15,8 @@ import { AuthGuard } from './auth.guard';
       secret: process.env.JWT_SECRET || 'secret',
       signOptions: { expiresIn: '1d', algorithm: 'HS256' },
     }),
-    forwardRef(() => UserModule),
     PrismaModule,
+    MailModule,
   ],
   providers: [
     AuthService,
@@ -27,4 +28,4 @@ import { AuthGuard } from './auth.guard';
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

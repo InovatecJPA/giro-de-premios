@@ -18,7 +18,6 @@ import { PatchUpdateRaffleEditionDto } from "./dto/patch-update-raffle-edition.d
 export class RaffleEditionService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly ticketRaffleService: TicketRaffleService,
         private readonly ticketQueueService: TicketQueueService
     ) { }
 

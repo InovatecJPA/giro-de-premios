@@ -153,8 +153,18 @@ export class AuthService {
       throw new ConflictException('Email já cadastrado');
     }
 
-    const activation_token = randomBytes(16).toString('hex');
-    const expiration_date = new Date(Date.now() + 60 * 60 * 1000);
+    let activation_token = '';
+    let expiration_date = new Date(Date.now() + 60 * 60 * 1000);
+    let tokenExists = true;
+
+    while (tokenExists) {
+      activation_token = randomBytes(32).toString('hex');
+      expiration_date = new Date(Date.now() + 60 * 60 * 1000);
+
+      const auth = this.findByToken(activation_token);
+      tokenExists = !!auth;
+    }
+
 
     const dataWithoutPasswordAndUsername = {
       ...data,
