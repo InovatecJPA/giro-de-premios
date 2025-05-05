@@ -4,6 +4,7 @@ import { PaginationOptions } from "../../utils/types/pagination.types";
 import { ResponseForgotPasswordDTO } from "./dto/response-forgot-password.dto";
 import { plainToInstance } from "class-transformer";
 import { CreateForgotPasswordDto } from "./dto/create-forgot-password.dto";
+import { randomBytes } from "node:crypto";
 
 @Injectable()
 export default class ForgotPasswordService {
@@ -47,8 +48,15 @@ export default class ForgotPasswordService {
     }
 
     async create(data: CreateForgotPasswordDto) {
+
+        const dataForgotPassword = {
+            ...data,
+            password_reset_token: randomBytes(32).toString('hex'),
+            password_reset_token_expires: new Date(Date.now() + 60 * 60 * 1000),
+        }
+
         return this.prisma.forgotPasswordToken.create({
-            data,
+            data: { ...dataForgotPassword }
         })
     }
 }

@@ -161,7 +161,7 @@ export class AuthService {
       activation_token = randomBytes(32).toString('hex');
       expiration_date = new Date(Date.now() + 60 * 60 * 1000);
 
-      const auth = this.findByToken(activation_token);
+      const auth = await this.findByToken(activation_token);
       tokenExists = !!auth;
     }
 

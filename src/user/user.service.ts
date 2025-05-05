@@ -114,6 +114,7 @@ export class UserService {
       return plainToInstance(ResponseUserDTO, {
         ...user,
         comissao: user.comissao.toString(),
+        saldo: user.saldo.toString(),
       });
     });
   }

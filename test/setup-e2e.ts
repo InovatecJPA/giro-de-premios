@@ -27,8 +27,6 @@ beforeEach(async () => {
     await initializeApp()
 });
 
-
-
 afterEach(async () => {
     await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`)
 })
