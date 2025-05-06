@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaginationOptions } from '../../utils/types/pagination.types';
 import { plainToInstance } from 'class-transformer';
-import { ResponseDepositExtractDto } from './dto/response-deposit-extract.dto';
+import { ResponseDepositExtractDto, ResponseDepositExtractSchema } from './dto/response-deposit-extract.dto';
 import { CreateDepositExtractDto } from './dto/create-deposit-extract.dto';
 import { ExtractType, User } from '../../prisma/generated/prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -13,7 +13,6 @@ import { UserService } from '../user.service';
 export class ExtractService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly userService: UserService
     ) { }
 
     async findAll(paginationOptions: PaginationOptions) {
@@ -21,17 +20,11 @@ export class ExtractService {
             this.prisma.extract,
             {
                 ...paginationOptions,
-                select: {
-                    id: true,
-                    amount: true,
-                    type: true,
-                    ticket_payment_id: true,
-                    created_at: true,
-                },
+
             }
         )
 
-        const data = items.map((item) => plainToInstance(ResponseDepositExtractDto, item))
+        const data = items.map((item) => ResponseDepositExtractSchema.parse(item))
 
         return {
             data: data,

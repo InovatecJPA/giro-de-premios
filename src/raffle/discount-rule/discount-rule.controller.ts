@@ -15,7 +15,7 @@ import { DiscountRuleService } from './discount-rule.service';
 import { CreateDiscountRuleDto } from './dto/create-discount-rule.dto';
 import { PatchUpdateDiscountRuleDto } from './dto/patch-update-discount-rule.dto';
 import { PutUpdateDiscountRuleDto } from './dto/put-update-discount-rule.dto';
-import { ResponseDiscountRuleDto } from './dto/response-discount-rule.dto';
+import { ResponseDiscountRuleDto, ResponseDiscountRuleSchema } from './dto/response-discount-rule.dto';
 
 @Controller('discount-rules')
 export class DiscountRuleController {
@@ -33,13 +33,13 @@ export class DiscountRuleController {
   @Get(':id')
   async findById(@Param('id') id: string) {
     const rule = await this.service.findById(id);
-    return { data: plainToInstance(ResponseDiscountRuleDto, rule) };
+    return { data: ResponseDiscountRuleSchema.parse(rule) };
   }
 
   @Post()
   async create(@Body() dto: CreateDiscountRuleDto) {
     const created = await this.service.create(dto);
-    return { data: plainToInstance(ResponseDiscountRuleDto, created) };
+    return { data: ResponseDiscountRuleSchema.parse(created) };
   }
 
   @Patch(':id')
@@ -48,7 +48,7 @@ export class DiscountRuleController {
     @Body() dto: PatchUpdateDiscountRuleDto,
   ) {
     const updated = await this.service.update(id, dto);
-    return { data: plainToInstance(ResponseDiscountRuleDto, updated) };
+    return { data: ResponseDiscountRuleSchema.parse(updated) };
   }
 
   @Put(':id')
@@ -57,7 +57,7 @@ export class DiscountRuleController {
     @Body() dto: PutUpdateDiscountRuleDto,
   ) {
     const updated = await this.service.update(id, dto);
-    return { data: plainToInstance(ResponseDiscountRuleDto, updated) };
+    return { data: ResponseDiscountRuleSchema.parse(updated) };
   }
 
   @Delete(':id')

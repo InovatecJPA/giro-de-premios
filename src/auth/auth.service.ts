@@ -13,7 +13,7 @@ import { Auth, PrismaClient, Profiles, User } from 'src/prisma/generated/prisma/
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { PaginationOptions } from '../utils/types/pagination.types';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthResponseDto, AuthResponseSchema } from './dto/auth-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { EmailOptions, MailService } from '../mail/mail.service';
 import { randomBytes } from 'crypto';
@@ -39,20 +39,10 @@ export class AuthService {
       this.prisma.auth,
       {
         ...paginationOptions,
-        select: {
-          id: true,
-          provider: true,
-          provider_user_id: true,
-          is_verified: true,
-          user_id: true,
-          created_at: true,
-          updated_at: true,
-          password_hash: false,
-        },
       }
     );
 
-    const data = plainToInstance(AuthResponseDto, items);
+    const data = AuthResponseSchema.array().parse(items);
 
     return {
       data,
@@ -82,7 +72,7 @@ export class AuthService {
       }
     )
 
-    const data = items.map((item) => plainToInstance(AuthResponseDto, item));
+    const data = items.map((item) => AuthResponseSchema.parse(item));
 
     return {
       data,

@@ -4,11 +4,8 @@ import { CreateRaffleEditionDto } from "./dto/create-raffle-edition.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { Decimal } from "@prisma/client/runtime/library";
 import { plainToInstance } from "class-transformer";
-import { ResponseRaffleEditionDto } from "./dto/response-raffle-edition.dto";
-import { CreateTicketRaffleDto } from "../tickets/ticket-raffle/dto/create-ticket-raffle.dto";
+import { ResponseRaffleEditionDto, ResponseRaffleEditionSchema } from "./dto/response-raffle-edition.dto";
 import { CreateRaffleEditionPrizeDto } from "./dto/create-raffle-edition-prize.dto";
-import { TicketRaffleService } from "../tickets/ticket-raffle/ticket-raffle.service";
-import { generateRandomNumbers } from "../../utils/functions/generateNumbers";
 import { TicketQueueService } from "../tickets/ticket-queue/ticket-queue.service";
 import { CreateTicketQueuePrizedDto } from "../tickets/ticket-queue/dto/create-ticket-queue-prized.dto";
 import { PutUpdateRaffleEditionDto } from "./dto/put-update-raffle-edition.dto";
@@ -28,7 +25,7 @@ export class RaffleEditionService {
                 ...pagination,
                 select: {
                     id: true,
-                    name: true,
+                    title: true,
                     price: true,
                     total_tickets: true,
                     created_at: true,
@@ -36,7 +33,7 @@ export class RaffleEditionService {
             }
         )
 
-        const data = items.map((item) => plainToInstance(ResponseRaffleEditionDto, { ...item, price: item.price.toString() }))
+        const data = items.map((item) => ResponseRaffleEditionSchema.parse(item));
 
         return { data, meta: { total, pages, skip, take } };
     }
@@ -104,5 +101,8 @@ export class RaffleEditionService {
         }
 
         await this.update(id, { winner_ticket_drawn: ticket_number, status: 'closed' })
+
+        // move ticket to history
+        // ticketPaymento
     }
 }

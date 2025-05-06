@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PutUpdateUser } from './dto/put-update-user.dto';
 import { PatchUpdateUser } from './dto/patch-update-user.dto';
-import { ResponseUserDTO } from './dto/response-user.dto';
+import { ResponseUserDTO, ResponseUserSchema } from './dto/response-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClient, User } from 'src/prisma/generated/prisma/client';
 import { PaginationOptions } from '../utils/types/pagination.types';
@@ -25,28 +25,11 @@ export class UserService {
       this.prisma.user,
       {
         ...paginationOptions,
-        select: {
-          id: true,
-          name: true,
-          cpf: true,
-          number: true,
-          social_media: true,
-          saldo: true,
-          comissao: true,
-          profile: true,
-          owner_id: true,
-        },
+
       }
     );
 
-    const data = items.map(item => plainToInstance(ResponseUserDTO, {
-      ...item,
-      comissao: item.comissao !== null && item.comissao !== undefined
-        ? (typeof item.comissao.toNumber === 'function'
-          ? item.comissao.toNumber()
-          : parseFloat(String(item.comissao)) || 0)
-        : 0
-    }));
+    const data = items.map(item => ResponseUserSchema.parse(item));
 
     return {
       data,
@@ -111,11 +94,7 @@ export class UserService {
         await this.authService.registerSocial(credentialsPayload, prisma as PrismaClient)
       }
 
-      return plainToInstance(ResponseUserDTO, {
-        ...user,
-        comissao: user.comissao.toString(),
-        saldo: user.saldo.toString(),
-      });
+      return ResponseUserSchema.parse(user)
     });
   }
 

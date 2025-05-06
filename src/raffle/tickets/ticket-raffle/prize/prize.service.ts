@@ -4,7 +4,7 @@ import { CreatePrizeDto } from "./dto/create-prize.dto";
 import { PutUpdatePrizeDto } from "./dto/put-update-prize.dto";
 import { PatchUpdatePrizeDto } from "./dto/patch-update-prize.dto";
 import { plainToInstance } from "class-transformer";
-import { ResponsePrizeDto } from "./dto/response-prize.dto";
+import { ResponsePrizeDto, ResponsePrizeSchema } from "./dto/response-prize.dto";
 import { Prize } from "../../../../prisma/generated/prisma/client";
 import { PrismaService } from "../../../../prisma/prisma.service";
 
@@ -25,7 +25,7 @@ export class PrizeService {
             }
         )
 
-        const data = plainToInstance(ResponsePrizeDto, items);
+        const data = ResponsePrizeSchema.array().parse(items);
 
         return {
             data,

@@ -6,7 +6,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateDiscountRuleDto } from './dto/create-discount-rule.dto';
 import { PatchUpdateDiscountRuleDto } from './dto/patch-update-discount-rule.dto';
 import { PutUpdateDiscountRuleDto } from './dto/put-update-discount-rule.dto';
-import { ResponseDiscountRuleDto } from './dto/response-discount-rule.dto';
+import { ResponseDiscountRuleDto, ResponseDiscountRuleSchema } from './dto/response-discount-rule.dto';
 import { plainToInstance } from 'class-transformer';
 import { PaginationOptions } from '../../utils/types/pagination.types';
 
@@ -29,10 +29,7 @@ export class DiscountRuleService {
       });
 
     const data = items.map(item =>
-      plainToInstance(ResponseDiscountRuleDto, {
-        ...item,
-        discount_value: item.discount_value.toString(),
-      }),
+      ResponseDiscountRuleSchema.parse(item),
     );
 
     return { data, meta: { total, pages, skip, take } };

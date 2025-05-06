@@ -14,7 +14,7 @@ import { PrizeService } from './prize.service';
 import { CreatePrizeDto } from './dto/create-prize.dto';
 import { PatchUpdatePrizeDto } from './dto/patch-update-prize.dto';
 import { PutUpdatePrizeDto } from './dto/put-update-prize.dto';
-import { ResponsePrizeDto } from './dto/response-prize.dto';
+import { ResponsePrizeDto, ResponsePrizeSchema } from './dto/response-prize.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Controller('prizes')
@@ -50,7 +50,7 @@ export class PrizeController {
     try {
       const created = await this.prizeService.create(data);
 
-      const prizeResponse = plainToInstance(ResponsePrizeDto, created);
+      const prizeResponse = ResponsePrizeSchema.parse(created);
       return { data: { prizeResponse } };
     } catch (error) {
       throw error;
@@ -65,7 +65,7 @@ export class PrizeController {
     try {
       const updated = await this.prizeService.update(id, data);
 
-      const prizeResponse = plainToInstance(ResponsePrizeDto, updated);
+      const prizeResponse = ResponsePrizeSchema.parse(updated);
       return { data: { prizeResponse } };
     } catch (error) {
       throw error;
@@ -80,7 +80,7 @@ export class PrizeController {
     try {
       const updated = await this.prizeService.update(id, data);
 
-      const prizeResponse = plainToInstance(ResponsePrizeDto, updated);
+      const prizeResponse = ResponsePrizeSchema.parse(updated);
       return { data: { prizeResponse } };
     } catch (error) {
       throw error;

@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Param, Body, Patch, Query, HttpCode } from '@nestjs/common';
 import { WithdrawalRequestService } from './withdrawal-request.service';
 import { CreateWithdrawalRequestDTO } from './dto/create-withdrawal-request.dto';
-import { ResponseDepositExtractDto } from '../dto/response-deposit-extract.dto';
+import { ResponseDepositExtractDto, ResponseDepositExtractSchema } from '../dto/response-deposit-extract.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Controller('withdrawal-requests')
@@ -17,7 +17,7 @@ export class WithdrawalRequestController {
     async findById(@Param('id') id: string) {
         const withdrawal = await this.service.findById(id);
 
-        const data = plainToInstance(ResponseDepositExtractDto, withdrawal)
+        const data = ResponseDepositExtractSchema.parse(withdrawal);
 
         return { data }
     }

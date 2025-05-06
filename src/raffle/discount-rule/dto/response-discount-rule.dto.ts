@@ -1,18 +1,10 @@
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { z } from 'zod';
 
-@Exclude()
-export class ResponseDiscountRuleDto {
-  @Expose()
-  id: string;
+export const ResponseDiscountRuleSchema = z.object({
+  id: z.string().uuid({ message: 'ID must be a valid UUID' }),
+  min_tickets: z.any(),
+  discount_value: z.any(),
+  raffle_edition_id: z.string().uuid({ message: 'Raffle edition ID must be a valid UUID' }),
+});
 
-  @Expose()
-  @Transform(({ value }) => value.toString())
-  min_tickets: string;
-
-  @Expose()
-  @Transform(({ value }) => value.toString())
-  discount_value: string;
-
-  @Expose()
-  raffle_edition_id: string;
-}
+export type ResponseDiscountRuleDto = z.infer<typeof ResponseDiscountRuleSchema>;

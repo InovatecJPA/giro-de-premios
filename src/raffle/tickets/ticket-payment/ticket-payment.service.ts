@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { PaginationOptions } from "../../../utils/types/pagination.types";
-import { ResponseTicketPaymentDto } from "./dto/response-ticket-payment.dto";
+import { ResponseTicketPaymentDto, ResponseTicketPaymentSchema } from "./dto/response-ticket-payment.dto";
 import { plainToInstance } from "class-transformer";
 import { BuyingTicketsDto } from "./dto/buying-ticket.dto";
 import { RaffleEditionService } from "../../raffle-edition/raffle-edition.service";
@@ -33,7 +33,7 @@ export class TicketPaymentService {
             }
         )
 
-        const data = items.map((item) => plainToInstance(ResponseTicketPaymentDto, item))
+        const data = items.map((item) => ResponseTicketPaymentSchema.parse(item))
 
         return {
             data,

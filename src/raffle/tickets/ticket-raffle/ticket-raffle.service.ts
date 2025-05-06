@@ -8,7 +8,7 @@ import { plainToInstance } from 'class-transformer';
 import { CreateTicketRaffleDto } from './dto/create-ticket-raffle.dto';
 import { PatchUpdateTicketRaffleDto } from './dto/patch-update-ticket-raffle.dto';
 import { PutUpdateTicketRaffleDto } from './dto/put-update-ticket-raffle.dto';
-import { ResponseTicketRaffleDto } from './dto/response-ticket-raffle.dto';
+import { ResponseTicketRaffleDto, ResponseTicketRaffleSchema } from './dto/response-ticket-raffle.dto';
 import { PaginationOptions } from '../../../utils/types/pagination.types';
 import { Prisma, TicketRaffle, TicketRaffleStatus } from '../../../prisma/generated/prisma/client';
 
@@ -35,10 +35,7 @@ export class TicketRaffleService {
       });
 
     const data = items.map((item) =>
-      plainToInstance(ResponseTicketRaffleDto, {
-        ...item,
-        raffle_number: item.ticket_raffle_number.toString(),
-      }),
+      ResponseTicketRaffleSchema.parse(item),
     );
 
     return { data, meta: { total, pages, skip, take } };

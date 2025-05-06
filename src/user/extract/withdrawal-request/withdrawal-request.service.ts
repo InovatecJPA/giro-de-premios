@@ -5,7 +5,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { ExtractType, PaymentStatus } from '../../../prisma/generated/prisma/client';
 import { PaginationOptions } from '../../../utils/types/pagination.types';
 import { plainToInstance } from 'class-transformer';
-import { ResponseDepositExtractDto } from '../dto/response-deposit-extract.dto';
+import { ResponseDepositExtractDto, ResponseDepositExtractSchema } from '../dto/response-deposit-extract.dto';
 
 @Injectable()
 export class WithdrawalRequestService {
@@ -42,7 +42,7 @@ export class WithdrawalRequestService {
             }
         )
 
-        const data = items.map((item) => plainToInstance(ResponseDepositExtractDto, item))
+        const data = items.map((item) => ResponseDepositExtractSchema.parse(item))
 
         return {
             data,

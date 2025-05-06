@@ -1,25 +1,17 @@
-import { IsBoolean, IsDate, IsString, IsUUID } from "class-validator";
+import { z } from 'zod';
 
 
-export class AuthResponseDto {
-    @IsUUID('4')
-    id: string;
+export const AuthResponseSchema = z.object({
+    id: z.string().uuid({ message: 'ID must be a valid UUID' }),
+    provider: z.string(),
+    provider_user_id: z.string().min(1, { message: 'Provider user ID is required' }),
+    is_verified: z.boolean({ message: 'Is verified must be a boolean' }).default(false),
+    user_id: z.string().uuid({ message: 'User ID must be a valid UUID' }),
+    created_at: z.date(),
+    updated_at: z.date(),
+    password_hash: z.any().nullable().optional().transform(() => undefined),
+    activation_token: z.any().nullable().optional().transform(() => undefined),
+    expiration_date: z.any().nullable().optional().transform(() => undefined),
+});
 
-    @IsString()
-    provider: string;
-
-    @IsBoolean()
-    is_verified: boolean
-
-    @IsString()
-    provider_user_id: string;
-
-    @IsUUID('4')
-    user_id: string;
-
-    @IsDate()
-    created_at: Date;
-
-    @IsDate()
-    updated_at: Date
-}
+export type AuthResponseDto = z.infer<typeof AuthResponseSchema>;

@@ -1,8 +1,7 @@
 import { Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
 import ForgotPasswordService from "./forgot-password.service";
 import { plainToInstance } from "class-transformer";
-import { ResponseForgotPasswordDTO } from "./dto/response-forgot-password.dto";
-import { CreateForgotPasswordDto } from "./dto/create-forgot-password.dto";
+import { ResponseForgotPasswordSchema } from "./dto/response-forgot-password.dto";
 
 @Controller('forgot-password')
 export default class ForgotPasswordController {
@@ -21,7 +20,7 @@ export default class ForgotPasswordController {
     async findById(id: string) {
         const forgotPassword = this.forgotPasswordService.findById(id)
 
-        const forgotPasswordResponse = plainToInstance(ResponseForgotPasswordDTO, forgotPassword);
+        const forgotPasswordResponse = ResponseForgotPasswordSchema.parse(forgotPassword)
 
         return { data: { forgotPasswordResponse } }
     }

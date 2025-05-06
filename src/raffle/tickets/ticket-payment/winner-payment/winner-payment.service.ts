@@ -3,7 +3,7 @@ import { PrismaService } from "../../../../prisma/prisma.service";
 import { CreateWinnerPaymentDto } from "./dto/create-winner-payment.dto";
 import { PaginationOptions } from "../../../../utils/types/pagination.types";
 import { plainToInstance } from "class-transformer";
-import { ResponseWinnerPaymentDto } from "./dto/response-winner-payment.dto";
+import { ResponseWinnerPaymentDto, ResponseWinnerPaymentSchema } from "./dto/response-winner-payment.dto";
 import { PaymentStatus } from "../../../../prisma/generated/prisma/client";
 import { UpdateStatusSuccessWinnerPaymentDto } from "./dto/update-status-success-winner-payment.dto";
 
@@ -30,7 +30,7 @@ export class WinnerPaymentService {
             }
         )
 
-        const data = items.map((item) => plainToInstance(ResponseWinnerPaymentDto, item))
+        const data = items.map((item) => ResponseWinnerPaymentSchema.parse(item));
 
         return {
             data,

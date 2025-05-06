@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { PaginationOptions } from "../../utils/types/pagination.types";
-import { ResponseForgotPasswordDTO } from "./dto/response-forgot-password.dto";
 import { plainToInstance } from "class-transformer";
 import { CreateForgotPasswordDto } from "./dto/create-forgot-password.dto";
 import { randomBytes } from "node:crypto";
 import { MailService } from "../../mail/mail.service";
+import { ResponseForgotPasswordSchema } from "./dto/response-forgot-password.dto";
 
 @Injectable()
 export default class ForgotPasswordService {
@@ -28,7 +28,7 @@ export default class ForgotPasswordService {
             }
         )
 
-        const data = items.map((item) => plainToInstance(ResponseForgotPasswordDTO, item))
+        const data = items.map((item) => ResponseForgotPasswordSchema.parse(item))
 
         return {
             data,

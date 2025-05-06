@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsOptional,
   IsEnum,
@@ -11,7 +11,6 @@ import {
   Min,
   Max,
 } from 'class-validator';
-import { AuthRegisterDto } from '../../auth/dto/auth-register.dto';
 import { Profiles } from '../../prisma/generated/prisma/client';
 import { AuthLoginDto } from '../../auth/dto/auth-login.dto';
 

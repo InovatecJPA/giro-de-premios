@@ -1,27 +1,19 @@
-import { Exclude, Expose, Transform } from 'class-transformer';
+// src/ticket-raffle/dto/response-ticket-raffle.dto.ts
+import { z } from 'zod';
 import { TicketRaffleStatus } from '../../../../prisma/generated/prisma/client';
 
-@Exclude()
-export class ResponseTicketRaffleDto {
-  @Expose()
-  id: string;
 
-  @Expose()
-  @Transform(({ value }) => value.toString())
-  raffle_number: string;
+export const ResponseTicketRaffleSchema = z.object({
+  id: z.string().uuid({ message: 'ID must be a valid UUID' }),
+  raffle_number: z
+    .any()
+    .transform((value) => value.toString())
+    .pipe(z.string({ message: 'Raffle number must be a string' })),
+  status: z.nativeEnum(TicketRaffleStatus, { message: 'Status must be a valid TicketRaffleStatus' }),
+  prize_id: z.string().uuid({ message: 'Prize ID must be a valid UUID' }).nullable(),
+  raffle_edition_id: z.string().uuid({ message: 'Raffle edition ID must be a valid UUID' }),
+  created_at: z.date(),
+  updated_at: z.date(),
+});
 
-  @Expose()
-  status: TicketRaffleStatus
-
-  @Expose()
-  prize_id: string;
-
-  @Expose()
-  raffle_edition_id: string;
-
-  @Expose()
-  created_at: Date;
-
-  @Expose()
-  updated_at: Date;
-}
+export type ResponseTicketRaffleDto = z.infer<typeof ResponseTicketRaffleSchema>;

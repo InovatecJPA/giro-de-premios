@@ -1,39 +1,20 @@
-import { Decimal } from '@prisma/client/runtime/library';
-import { Exclude, Expose, Transform, Type } from 'class-transformer';
+import { z } from 'zod';
 import { RaffleEditionStatus } from '../../../prisma/generated/prisma/client';
 
-@Exclude()
-export class ResponseRaffleEditionDto {
-  @Expose()
-  id: string;
 
-  @Expose()
-  title: string;
+export const ResponseRaffleEditionSchema = z.object({
+  id: z.string().uuid({ message: 'ID must be a valid UUID' }),
+  title: z.string().min(1, { message: 'Title is required' }),
+  description: z.string().min(1, { message: 'Description is required' }),
+  status: z.nativeEnum(RaffleEditionStatus, { message: 'Status must be a valid RaffleEditionStatus' }),
+  total_tickets: z.number().int().positive({ message: 'Total tickets must be a positive integer' }),
+  winner_tickets: z.number().int().nonnegative({ message: 'Winner tickets must be a non-negative integer' }),
+  price: z.any(),
+  raffle_draw_date: z
+    .string()
+    .datetime({ message: 'Raffle draw date must be a valid ISO datetime' })
+    .transform((value) => new Date(value)),
+  user_id: z.string().uuid({ message: 'User ID must be a valid UUID' }).nullable(),
+});
 
-  @Expose()
-  description: string;
-
-  @Expose()
-  status: RaffleEditionStatus;
-
-  @Expose()
-  total_tickets: number;
-
-  @Expose()
-  winner_tickets: number;
-
-  @Expose()
-  @Transform(({ value }) => {
-    if (value instanceof Decimal) return value.toString();
-    if (typeof value === 'string') return value;
-    return new Decimal(value).toString();
-  })
-  price: string;
-
-  @Expose()
-  @Type(() => Date)
-  raffle_draw_date: Date;
-
-  @Expose()
-  user_id: string | null;
-}
+export type ResponseRaffleEditionDto = z.infer<typeof ResponseRaffleEditionSchema>;

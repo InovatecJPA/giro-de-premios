@@ -14,7 +14,7 @@ import { RaffleEditionService } from './raffle-edition.service';
 import { CreateRaffleEditionDto } from './dto/create-raffle-edition.dto';
 import { PatchUpdateRaffleEditionDto } from './dto/patch-update-raffle-edition.dto';
 import { PutUpdateRaffleEditionDto } from './dto/put-update-raffle-edition.dto';
-import { ResponseRaffleEditionDto } from './dto/response-raffle-edition.dto';
+import { ResponseRaffleEditionDto, ResponseRaffleEditionSchema } from './dto/response-raffle-edition.dto';
 import { plainToInstance } from 'class-transformer';
 import { CreateBodyRaffleEditionDto } from './dto/create-raffle-edition-body.dto';
 import { PatchAddFinalPrizeDto } from './dto/patch-add-final-prize.dto';
@@ -57,7 +57,8 @@ export class RaffleEditionController {
 
       const raffleEdition = await this.raffleEditionService.create(dataEdition, prizes);
 
-      const raffleEditionResponse = plainToInstance(ResponseRaffleEditionDto, { ...raffleEdition, price: raffleEdition.price.toString() });
+      const raffleEditionResponse = ResponseRaffleEditionSchema.parse(raffleEdition)
+
       return { data: { raffleEditionResponse } };
     } catch (error) {
       throw error;
@@ -72,7 +73,8 @@ export class RaffleEditionController {
     try {
       const updated = await this.raffleEditionService.update(id, data);
 
-      const raffleEditionResponse = plainToInstance(ResponseRaffleEditionDto, updated);
+      const raffleEditionResponse = ResponseRaffleEditionSchema.parse(updated);
+
       return { data: { raffleEditionResponse } };
     } catch (error) {
       throw error;
@@ -87,7 +89,7 @@ export class RaffleEditionController {
     try {
       const updated = await this.raffleEditionService.update(id, data);
 
-      const raffleEditionResponse = plainToInstance(ResponseRaffleEditionDto, updated);
+      const raffleEditionResponse = ResponseRaffleEditionSchema.parse(updated);
       return { data: { raffleEditionResponse } };
     } catch (error) {
       throw error;

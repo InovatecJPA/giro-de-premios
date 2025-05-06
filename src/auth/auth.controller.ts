@@ -3,7 +3,7 @@ import { AuthService } from "./auth.service";
 import { AuthLoginDto } from "./dto/auth-login.dto";
 import { IsPublic } from "../decorators/is-public-validator.decorator";
 import { plainToInstance } from "class-transformer";
-import { AuthResponseDto } from "./dto/auth-response.dto";
+import { AuthResponseDto, AuthResponseSchema } from "./dto/auth-response.dto";
 import { AuthResetDto } from "./dto/auth-reset.dto";
 
 @Controller('auth')
@@ -29,7 +29,7 @@ export class AuthController {
     async findById(@Param('id') id: string) {
         const auth = await this.authService.findById(id)
 
-        const authResponseDto = plainToInstance(AuthResponseDto, auth);
+        const authResponseDto = AuthResponseSchema.parse(auth)
 
         return { data: { authResponseDto } }
     }
@@ -44,7 +44,7 @@ export class AuthController {
     async findByProviderAndProviderUserId(@Param('providerUserId') providerUserId: string, @Param('provider') provider: string) {
         const auth = await this.authService.findByProviderAndProviderUserId(providerUserId, provider);
 
-        const authResponseDto = plainToInstance(AuthResponseDto, auth);
+        const authResponseDto = AuthResponseSchema.parse(auth)
 
         return { data: { authResponseDto } }
     }

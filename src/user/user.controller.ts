@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ResponseUserDTO } from './dto/response-user.dto';
+import { ResponseUserDTO, ResponseUserSchema } from './dto/response-user.dto';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { PatchUpdateUser } from './dto/patch-update-user.dto';
 import { PutUpdateUser } from './dto/put-update-user.dto';
@@ -62,11 +62,7 @@ export default class UserController {
 
       const user = await this.userService.update(id, data);
 
-      const userResponse = plainToInstance(ResponseUserDTO, {
-        ...user,
-        comissao: user.comissao.toString(),
-        saldo: user.saldo.toString(),
-      });
+      const userResponse = ResponseUserSchema.parse(user)
 
       return { data: { userResponse } }
     } catch (error) {
@@ -79,11 +75,7 @@ export default class UserController {
     try {
       const user = await this.userService.update(id, data);
 
-      const userResponse = plainToInstance(ResponseUserDTO, {
-        ...user,
-        comissao: user.comissao.toString(),
-        saldo: user.saldo.toString(),
-      });
+      const userResponse = ResponseUserSchema.parse(user)
 
       return { data: { userResponse } }
     } catch (error) {

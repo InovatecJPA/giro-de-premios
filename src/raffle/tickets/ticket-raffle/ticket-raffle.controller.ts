@@ -15,7 +15,7 @@ import { TicketRaffleService } from './ticket-raffle.service';
 import { CreateTicketRaffleDto } from './dto/create-ticket-raffle.dto';
 import { PatchUpdateTicketRaffleDto } from './dto/patch-update-ticket-raffle.dto';
 import { PutUpdateTicketRaffleDto } from './dto/put-update-ticket-raffle.dto';
-import { ResponseTicketRaffleDto } from './dto/response-ticket-raffle.dto';
+import { ResponseTicketRaffleDto, ResponseTicketRaffleSchema } from './dto/response-ticket-raffle.dto';
 
 @Controller('ticket-raffles')
 export class TicketRaffleController {
@@ -34,7 +34,7 @@ export class TicketRaffleController {
   async findById(@Param('id') id: string) {
     const raffle = await this.ticketRaffleService.findById(id);
     return {
-      data: plainToInstance(ResponseTicketRaffleDto, raffle),
+      data: ResponseTicketRaffleSchema.parse(raffle),
     };
   }
 
@@ -42,7 +42,7 @@ export class TicketRaffleController {
   async create(@Body() dto: CreateTicketRaffleDto) {
     const created = await this.ticketRaffleService.create(dto);
     return {
-      data: plainToInstance(ResponseTicketRaffleDto, created),
+      data: ResponseTicketRaffleSchema.parse(created),
     };
   }
 
@@ -53,7 +53,7 @@ export class TicketRaffleController {
   ) {
     const updated = await this.ticketRaffleService.update(id, dto);
     return {
-      data: plainToInstance(ResponseTicketRaffleDto, updated),
+      data: ResponseTicketRaffleSchema.parse(updated),
     };
   }
 
@@ -64,7 +64,7 @@ export class TicketRaffleController {
   ) {
     const updated = await this.ticketRaffleService.update(id, dto);
     return {
-      data: plainToInstance(ResponseTicketRaffleDto, updated),
+      data: ResponseTicketRaffleSchema.parse(updated),
     };
   }
 

@@ -1,10 +1,15 @@
-import { IsDate, IsUUID } from "class-validator";
-import { CreateForgotPasswordDto } from "./create-forgot-password.dto";
+import { z } from 'zod';
 
-export class ResponseForgotPasswordDTO extends CreateForgotPasswordDto {
-    @IsUUID('4')
-    id: string
+export const ResponseForgotPasswordSchema = z.object({
+    id: z.string().uuid({ message: 'ID must be a valid UUID' }),
+    auth_id: z.string().uuid({ message: 'Auth ID must be a valid UUID' }),
+    password_reset_token: z.string().min(1, { message: 'Password reset token is required' }),
+    password_reset_token_expires: z
+        .string()
+        .datetime({ message: 'Password reset token expires must be a valid ISO datetime' })
+        .transform((value) => new Date(value)),
+    created_at: z.date(),
 
-    @IsDate()
-    created_at: Date
-}
+});
+
+export type ResponseForgotPasswordDto = z.infer<typeof ResponseForgotPasswordSchema>;
