@@ -3,17 +3,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import {
-  Prisma,
-  TicketRaffle,
-  TicketRaffleStatus,
-} from 'src/prisma/generated/prisma/client';
+
 import { plainToInstance } from 'class-transformer';
 import { CreateTicketRaffleDto } from './dto/create-ticket-raffle.dto';
 import { PatchUpdateTicketRaffleDto } from './dto/patch-update-ticket-raffle.dto';
 import { PutUpdateTicketRaffleDto } from './dto/put-update-ticket-raffle.dto';
 import { ResponseTicketRaffleDto } from './dto/response-ticket-raffle.dto';
 import { PaginationOptions } from '../../../utils/types/pagination.types';
+import { Prisma, TicketRaffle, TicketRaffleStatus } from '../../../prisma/generated/prisma/client';
 
 
 @Injectable()

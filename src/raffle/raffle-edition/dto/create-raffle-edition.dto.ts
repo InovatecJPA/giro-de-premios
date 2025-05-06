@@ -1,7 +1,7 @@
 import { Decimal } from '@prisma/client/runtime/library';
 import { Transform } from 'class-transformer';
 import { IsString, IsOptional, IsEnum, IsInt, Min, IsDateString, IsUUID, IsDecimal, Validate, ValidateNested, IsNumberString } from 'class-validator';
-import { RaffleEditionStatus } from 'src/prisma/generated/prisma/client';
+import { RaffleEditionStatus } from '../../../prisma/generated/prisma/client';
 
 export class CreateRaffleEditionDto {
   @IsString()

@@ -1,6 +1,6 @@
 import { Decimal } from '@prisma/client/runtime/library';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
-import { RaffleEditionStatus } from 'src/prisma/generated/prisma/client';
+import { RaffleEditionStatus } from '../../../prisma/generated/prisma/client';
 
 @Exclude()
 export class ResponseRaffleEditionDto {

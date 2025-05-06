@@ -6,8 +6,8 @@ export class MailController {
     constructor(private readonly mailService: MailService) { }
 
     @Get()
-    async testEmail() {
-        await this.mailService.sendMail({
+    testEmail() {
+        this.mailService.sendMail({
             to: 'pollyasr.dev@gmail.com',
             subject: 'Bem-vindo!',
             template: 'welcome',

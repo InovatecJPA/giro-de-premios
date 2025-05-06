@@ -1,24 +1,24 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
-import { PaginatedResult, PaginationOptions } from "src/utils/types/pagination.types";
+import { PaginationOptions } from "src/utils/types/pagination.types";
 import { CreatePrizeDto } from "./dto/create-prize.dto";
 import { PutUpdatePrizeDto } from "./dto/put-update-prize.dto";
 import { PatchUpdatePrizeDto } from "./dto/patch-update-prize.dto";
-import { Prize } from "src/prisma/generated/prisma/client";
 import { plainToInstance } from "class-transformer";
 import { ResponsePrizeDto } from "./dto/response-prize.dto";
+import { Prize } from "../../../../prisma/generated/prisma/client";
+import { PrismaService } from "../../../../prisma/prisma.service";
 
 @Injectable()
 export class PrizeService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService) { }
 
-    async findAll(paginationOptions: PaginationOptions){
-        const {items, pages, skip, take, total} = await this.prisma.paginate(
+    async findAll(paginationOptions: PaginationOptions) {
+        const { items, pages, skip, take, total } = await this.prisma.paginate(
             this.prisma.prize,
             {
                 ...paginationOptions,
                 select: {
-                    id:true,
+                    id: true,
                     prize_name: true,
                     prize_quantity: true,
                 },
@@ -33,13 +33,13 @@ export class PrizeService {
         }
     }
 
-    async findById(id :string) {
+    async findById(id: string) {
         const prize = await this.prisma.prize.findUnique({
             where: {
                 id,
             },
             select: {
-                id:true,
+                id: true,
                 prize_name: true,
                 prize_quantity: true,
             },
@@ -49,7 +49,7 @@ export class PrizeService {
     }
 
     async create(data: CreatePrizeDto) {
-        const prize = await this.prisma.prize.create({data})
+        const prize = await this.prisma.prize.create({ data })
 
         return prize
     }
@@ -67,7 +67,7 @@ export class PrizeService {
     async delete(id: string) {
         if (!(await this.exists(id)))
             throw new NotFoundException('Prize not found');
-        
+
         const deletedPrize = await this.prisma.prize.delete({
             where: {
                 id,
@@ -79,9 +79,9 @@ export class PrizeService {
 
     async exists(id: string) {
         if (await this.findById(id)) {
-          return true;
+            return true;
         }
-    
+
         return false;
-      }
+    }
 }

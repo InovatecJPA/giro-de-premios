@@ -9,14 +9,16 @@ import { MailController } from './mail.controller';
     imports: [
         MailerModule.forRoot({
             transport: {
-                host: "sandbox.smtp.mailtrap.io",
+                host: "smtp.hostinger.com",
+                port: 465,
+                secure: true,
                 auth: {
-                    user: "14d7d5e1f7a3ec",
-                    pass: "f4cd04ce908391",
+                    user: "contatosinovatec@inovatecjp.com",
+                    pass: "Inovat3cJp@",
                 },
             },
             defaults: {
-                from: '"No Reply" <no-reply@example.com>',
+                from: '"No Reply" <contatosinovatec@inovatecjp.com>',
             },
             template: {
                 dir: join(__dirname, 'templates'),

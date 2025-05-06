@@ -32,7 +32,7 @@ export class MailService {
         options: EmailOptions
     ) {
         try {
-            await this.mailService.sendMail({
+            this.mailService.sendMail({
                 to: options.to,
                 subject: options.subject,
                 template: options.template,

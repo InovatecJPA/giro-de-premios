@@ -163,7 +163,7 @@ export class TicketQueueProcessor {
                 }
             }
 
-            await this.mailService.sendMail(mailOptions)
+            this.mailService.sendMail(mailOptions)
 
             this.logger.log(`Ticket email sent successfully to ${payment.email}`);
         } catch (error) {

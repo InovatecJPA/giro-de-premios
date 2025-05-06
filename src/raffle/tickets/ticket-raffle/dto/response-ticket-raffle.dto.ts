@@ -1,6 +1,5 @@
-// src/ticket-raffle/dto/response-ticket-raffle.dto.ts
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { TicketRaffleStatus } from 'src/prisma/generated/prisma/client';
+import { TicketRaffleStatus } from '../../../../prisma/generated/prisma/client';
 
 @Exclude()
 export class ResponseTicketRaffleDto {
@@ -12,7 +11,7 @@ export class ResponseTicketRaffleDto {
   raffle_number: string;
 
   @Expose()
-  status: TicketRaffleStatus;
+  status: TicketRaffleStatus
 
   @Expose()
   prize_id: string;

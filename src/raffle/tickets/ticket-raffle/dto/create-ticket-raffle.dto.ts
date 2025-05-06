@@ -4,8 +4,8 @@ import {
   IsUUID,
   Min,
 } from 'class-validator';
-import { IsBigInt } from 'src/decorators/bigint-validator.decorator';
-import { TicketRaffleStatus } from 'src/prisma/generated/prisma/client';
+import { IsBigInt } from '../../../../decorators/bigint-validator.decorator';
+import { TicketRaffleStatus } from '../../../../prisma/generated/prisma/client';
 
 export class CreateTicketRaffleDto {
   @IsBigInt()

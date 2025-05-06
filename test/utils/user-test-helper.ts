@@ -23,7 +23,7 @@ export const defaultUser: UserTest = {
   comissao: '0.10',
   credentials: {
     provider: 'email',
-    provider_user_id: 'defaultUser@gmail.com',
+    provider_user_id: 'xrztyiqvvbrrrswuel@hthlm.com',
     password: 'Inova@123',
   }
 };
@@ -36,7 +36,7 @@ export const defaultOwner: UserTest = {
   social_media: null,
   credentials: {
     provider: 'email',
-    provider_user_id: 'defaultOwner@gmail.com',
+    provider_user_id: 'fariy85918@firain.com',
     password: 'Inova@123',
   }
 };

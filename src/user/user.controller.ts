@@ -82,6 +82,7 @@ export default class UserController {
       const userResponse = plainToInstance(ResponseUserDTO, {
         ...user,
         comissao: user.comissao.toString(),
+        saldo: user.saldo.toString(),
       });
 
       return { data: { userResponse } }
