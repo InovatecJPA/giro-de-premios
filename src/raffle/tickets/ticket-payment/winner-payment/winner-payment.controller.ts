@@ -1,9 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { WinnerPaymentService } from './winner-payment.service';
 import { CreateWinnerPaymentDto } from './dto/create-winner-payment.dto';
-import { UpdateStatusSuccessWinnerPaymentDto } from './dto/update-status-success-winner-payment.dto';
-import { plainToInstance } from 'class-transformer';
-import { ResponseWinnerPaymentDto } from './dto/response-winner-payment.dto';
 import { PaymentStatus } from '../../../../prisma/generated/prisma/client';
 
 @Controller('winner-payment')

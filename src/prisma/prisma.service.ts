@@ -29,7 +29,7 @@ export class PrismaService
     options: PaginationOptions & { where?: any; select?: any; orderBy?: any }
   ) {
     const skipCount = (options.skip - 1) * options.take;
-    const take = options.take;
+    const take = Number(options.take);
 
     const [total, items] = await this.$transaction(async () => {
       return Promise.all([

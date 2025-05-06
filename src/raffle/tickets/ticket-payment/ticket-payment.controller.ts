@@ -51,4 +51,9 @@ export class TicketPaymentController {
     async clearQueue() {
         return await this.ticketQueueService.clearQueue();
     }
+
+    @Get('ticket-count/:raffle_edition_id')
+    async countSoldTickets(@Param('raffle_edition_id') raffle_edition_id: string) {
+        return await this.ticketPaymentService.countSoldTickets(raffle_edition_id);
+    }
 }

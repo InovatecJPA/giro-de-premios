@@ -17,7 +17,7 @@ export default class ForgotPasswordController {
         return this.forgotPasswordService.findAll(paginationOptions)
     }
 
-    @Get()
+    @Get(':id')
     async findById(id: string) {
         const forgotPassword = this.forgotPasswordService.findById(id)
 

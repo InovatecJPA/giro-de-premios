@@ -47,6 +47,27 @@ export class TicketPaymentService {
         });
     }
 
+    async countSoldTickets(raffle_edition_id: string) {
+        const result = await this.prisma.ticketPayment.aggregate({
+            _sum: {
+                total_value: true,
+                ticket_amount: true,
+            },
+            where: {
+                ticket_raffle: {
+                    some: {
+                        raffle_edition_id: raffle_edition_id,
+                    },
+                },
+            },
+        });
+
+        return {
+            totalValue: result._sum.total_value ?? 0,
+            ticketAmount: result._sum.ticket_amount ?? 0,
+        };
+    }
+
     async buyTickets(buyingTicketsData: BuyingTicketsDto) {
         let discount = new Decimal(0)
         const edition = await this.raffleEditionService.findById(buyingTicketsData.raffle_edition_id);
