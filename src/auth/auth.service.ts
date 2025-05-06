@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { plainToInstance } from 'class-transformer';
 import { EmailOptions, MailService } from '../mail/mail.service';
 import { randomBytes } from 'crypto';
 import ForgotPasswordService from './forgot-password/forgot-password.service';
+import { Cron } from '@nestjs/schedule';
 
 export type JwtAuthPayload = {
   sub: string;
@@ -355,4 +357,37 @@ export class AuthService {
       data: { password_hash: await bcrypt.hash(newPassword, 10) },
     });
   }
+
+  @Cron('0 */10 * * * *')
+  async deleteExpiredTokens() {
+    const logger = new Logger('DeleteExpiredTokens');
+    let deletedCount = 0;
+
+    try {
+      while (true) {
+        const result = await this.prisma.auth.deleteMany({
+          where: {
+            expiration_date: {
+              lte: new Date(),
+            },
+            is_verified: false,
+          },
+        });
+
+        deletedCount += result.count;
+
+        if (result.count === 0) {
+          break;
+        }
+      }
+
+      logger.log(`Deleted ${deletedCount} expired tokens`);
+
+      return { count: deletedCount };
+    } catch (error) {
+      logger.error(`Failed to delete expired tokens: ${error.message}`);
+      throw error;
+    }
+  }
 }
+
