@@ -5,8 +5,11 @@ import { execSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { AppModule } from '../src/app.module';
 import { Test } from '@nestjs/testing';
+import { AuthModule } from '../src/auth/auth.module';
+import { TestAuthModule } from './utils/test-auth.module';
 
 const prisma = new PrismaClient()
+
 export let schemaId: string
 export let app: INestApplication
 
@@ -35,10 +38,13 @@ afterAll(async () => {
     await prisma.$disconnect()
 })
 
+
 async function initializeApp() {
     const module = await Test.createTestingModule({
         imports: [AppModule],
     })
+        .overrideModule(AuthModule)
+        .useModule(TestAuthModule)
         .compile();
 
     app = module.createNestApplication();

@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:3000/users
 
 ### Get all users
-GET {{baseUrl}}
+GET {{baseUrl}}?page=99
 
 ### Get a user by ID
 GET {{baseUrl}}/0fa135e7-7995-4b95-abfb-ed4f6d806aa8

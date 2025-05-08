@@ -13,7 +13,7 @@ export class PrizeService {
     constructor(private prisma: PrismaService) { }
 
     async findAll(paginationOptions: PaginationOptions) {
-        const { items, pages, skip, take, total } = await this.prisma.paginate(
+        const { items, meta } = await this.prisma.paginate(
             this.prisma.prize,
             {
                 ...paginationOptions,
@@ -28,8 +28,8 @@ export class PrizeService {
         const data = ResponsePrizeSchema.array().parse(items);
 
         return {
-            data,
-            meta: { total, pages, skip, take },
+            items: data,
+            meta,
         }
     }
 

@@ -13,8 +13,7 @@ import { Auth, PrismaClient, Profiles, User } from 'src/prisma/generated/prisma/
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { PaginationOptions } from '../utils/types/pagination.types';
-import { AuthResponseDto, AuthResponseSchema } from './dto/auth-response.dto';
-import { plainToInstance } from 'class-transformer';
+import { AuthResponseSchema } from './dto/auth-response.dto';
 import { EmailOptions, MailService } from '../mail/mail.service';
 import { randomBytes } from 'crypto';
 import ForgotPasswordService from './forgot-password/forgot-password.service';
@@ -35,7 +34,7 @@ export class AuthService {
     private prisma: PrismaService,
   ) { }
   async findAll(paginationOptions: PaginationOptions) {
-    const { items, pages, skip, take, total } = await this.prisma.paginate(
+    const { items, meta } = await this.prisma.paginate(
       this.prisma.auth,
       {
         ...paginationOptions,
@@ -45,8 +44,8 @@ export class AuthService {
     const data = AuthResponseSchema.array().parse(items);
 
     return {
-      data,
-      meta: { total, pages, skip, take },
+      items: data,
+      meta,
     };
   }
 
@@ -54,7 +53,7 @@ export class AuthService {
     user_id: string,
     paginationOptions: PaginationOptions,
   ) {
-    const { items, pages, skip, take, total } = await this.prisma.paginate(
+    const { items, meta } = await this.prisma.paginate(
       this.prisma.auth,
       {
         where: { user_id },
@@ -75,8 +74,8 @@ export class AuthService {
     const data = items.map((item) => AuthResponseSchema.parse(item));
 
     return {
-      data,
-      meta: { total, pages, skip, take },
+      items: data,
+      meta,
     };
   }
 

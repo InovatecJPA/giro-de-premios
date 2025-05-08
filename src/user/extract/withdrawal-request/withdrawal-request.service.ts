@@ -29,7 +29,7 @@ export class WithdrawalRequestService {
     }
 
     async findAll(paginationOptions: PaginationOptions) {
-        const { items, pages, skip, take, total } = await this.prisma.paginate(
+        const { items, meta } = await this.prisma.paginate(
             this.prisma.withdrawalRequest,
             {
                 ...paginationOptions,
@@ -45,8 +45,8 @@ export class WithdrawalRequestService {
         const data = items.map((item) => ResponseDepositExtractSchema.parse(item))
 
         return {
-            data,
-            meta: { total, pages, skip, take },
+            items: data,
+            meta,
         }
     }
 

@@ -1,9 +1,8 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { Body, Controller, Get, Headers, HttpCode, NotFoundException, Param, Patch, Post, Query } from "@nestjs/common";
+import { AuthService, JwtAuthPayload } from "./auth.service";
 import { AuthLoginDto } from "./dto/auth-login.dto";
 import { IsPublic } from "../decorators/is-public-validator.decorator";
-import { plainToInstance } from "class-transformer";
-import { AuthResponseDto, AuthResponseSchema } from "./dto/auth-response.dto";
+import { AuthResponseSchema } from "./dto/auth-response.dto";
 import { AuthResetDto } from "./dto/auth-reset.dto";
 
 @Controller('auth')
@@ -21,28 +20,31 @@ export class AuthController {
             take
         }
 
-        return await this.authService.findAll(pagination)
+        const auth = await this.authService.findAll(pagination)
+        return { data: auth }
     }
 
 
-    @Get(':id')
-    async findById(@Param('id') id: string) {
-        const auth = await this.authService.findById(id)
-
-        const authResponseDto = AuthResponseSchema.parse(auth)
-
-        return { data: { authResponseDto } }
-    }
 
     @Get('user/:userId')
     async findByUserId(@Param('userId') userId: string, @Query('page') skip = 1, @Query('limit') take = 10) {
         const pagination = { skip, take };
-        return await this.authService.findByUserId(userId, pagination);
+        const authUser = await this.authService.findByUserId(userId, pagination);
+
+        if (authUser.items.length === 0) {
+            throw new NotFoundException('Auth para o usuário não encontrado')
+        }
+
+        return { data: authUser }
     }
 
     @Get('provider/:provider/provider-user/:providerUserId')
     async findByProviderAndProviderUserId(@Param('providerUserId') providerUserId: string, @Param('provider') provider: string) {
         const auth = await this.authService.findByProviderAndProviderUserId(providerUserId, provider);
+
+        if (!auth) {
+            throw new NotFoundException('Auth nao encontrado')
+        }
 
         const authResponseDto = AuthResponseSchema.parse(auth)
 
@@ -51,7 +53,13 @@ export class AuthController {
 
     @Get('email/:email')
     async findByEmail(@Param('email') email: string) {
-        return await this.authService.findByEmail(email);
+        const authEmail = await this.authService.findByEmail(email);
+
+        if (authEmail.length === 0) {
+            throw new NotFoundException('Auth para o email nao encontrado')
+        }
+
+        return { data: authEmail }
     }
 
     @IsPublic()
@@ -87,4 +95,26 @@ export class AuthController {
         return await this.authService.resetForgotPassword(token, data.new_password);
     }
 
+    @Get('protected')
+    async protectedRoute(@Headers('authorization') token: string) {
+        const auth = this.authService.verifyToken(token.split(' ')[1]);
+
+        return {
+            message: 'This route is protected by the auth guard',
+            auth
+        };
+    }
+
+    @Get(':id')
+    async findById(@Param('id') id: string) {
+        const auth = await this.authService.findById(id)
+
+        if (!auth) {
+            throw new NotFoundException('Auth nao encontrado')
+        }
+
+        const authResponseDto = AuthResponseSchema.parse(auth)
+
+        return { data: { authResponseDto } }
+    }
 }

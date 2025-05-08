@@ -3,14 +3,15 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { app } from '../../../test/setup-e2e';
 import {
   defaultOwner,
-  defaultUser,
+  defaultUserLocal,
 } from '../../../test/utils/user-test-helper';
+
 
 describe('[POST] UserController (e2e)', () => {
   test('/users - should create a user without owner and without social media', async () => {
     const response = await request(app.getHttpServer())
       .post('/users')
-      .send(defaultUser);
+      .send(defaultUserLocal);
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
@@ -19,14 +20,16 @@ describe('[POST] UserController (e2e)', () => {
           id: expect.stringMatching(
             /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
           ),
-          name: defaultUser.name,
-          cpf: defaultUser.cpf,
-          number: defaultUser.number,
-          profile: defaultUser.profile,
+          name: defaultUserLocal.name,
+          cpf: defaultUserLocal.cpf,
+          number: defaultUserLocal.number,
+          profile: defaultUserLocal.profile,
           saldo: '0',
-          comissao: new Decimal(defaultUser.comissao || 0).toString(),
+          comissao: new Decimal(defaultUserLocal.comissao || 0).toString(),
           owner_id: null,
           social_media: null,
+          created_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          updated_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
         },
       },
     });
@@ -40,7 +43,7 @@ describe('[POST] UserController (e2e)', () => {
     const ownerId = firstResponse.body.data.userResponse.id;
 
     const userWithOwner = {
-      ...defaultUser,
+      ...defaultUserLocal,
       owner_id: ownerId,
     };
 
@@ -63,6 +66,8 @@ describe('[POST] UserController (e2e)', () => {
           saldo: '0',
           owner_id: ownerId,
           social_media: null,
+          created_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          updated_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
         },
       },
     });
@@ -70,7 +75,7 @@ describe('[POST] UserController (e2e)', () => {
 
   test('/users - should create a user with social media', async () => {
     const userWithSocialMedia = {
-      ...defaultUser,
+      ...defaultUserLocal,
       social_media: 'https://www.instagram.com/teste',
     };
 
@@ -93,6 +98,8 @@ describe('[POST] UserController (e2e)', () => {
           saldo: '0',
           owner_id: null,
           social_media: userWithSocialMedia.social_media,
+          created_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          updated_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
         },
       },
     });
@@ -106,7 +113,7 @@ describe('[POST] UserController (e2e)', () => {
     const ownerId = firstResponse.body.data.userResponse.id;
 
     const userWithOwnerAndSocialMedia = {
-      ...defaultUser,
+      ...defaultUserLocal,
       owner_id: ownerId,
       social_media: 'https://www.instagram.com/teste',
     };
@@ -132,16 +139,18 @@ describe('[POST] UserController (e2e)', () => {
           saldo: '0',
           owner_id: ownerId,
           social_media: userWithOwnerAndSocialMedia.social_media,
+          created_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          updated_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
         },
       },
     });
   });
 
   test('/users - should fail when creating repeated email', async () => {
-    await request(app.getHttpServer()).post('/users').send(defaultUser);
+    await request(app.getHttpServer()).post('/users').send(defaultUserLocal);
 
     const userSameEmailDifferentCpf = {
-      ...defaultUser,
+      ...defaultUserLocal,
       cpf: '12345678901',
     };
 
@@ -153,12 +162,12 @@ describe('[POST] UserController (e2e)', () => {
   });
 
   test('/users - should fail when creating repeated cpf', async () => {
-    await request(app.getHttpServer()).post('/users').send(defaultUser);
+    await request(app.getHttpServer()).post('/users').send(defaultUserLocal);
 
     const userSameCpfDifferentEmail = {
-      ...defaultUser,
+      ...defaultUserLocal,
       credentials: {
-        ...defaultUser.credentials,
+        ...defaultUserLocal.credentials,
         provider_user_id: 'userSameCpfDifferentEmail@gmail.com',
 
       }

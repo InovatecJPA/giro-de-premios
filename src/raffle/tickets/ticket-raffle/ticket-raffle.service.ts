@@ -20,7 +20,7 @@ export class TicketRaffleService {
   async findAll(
     pagination: PaginationOptions,
   ) {
-    const { total, items, pages, skip, take } =
+    const { items, meta } =
       await this.prisma.paginate(this.prisma.ticketRaffle, {
         ...pagination,
         select: {
@@ -38,7 +38,7 @@ export class TicketRaffleService {
       ResponseTicketRaffleSchema.parse(item),
     );
 
-    return { data, meta: { total, pages, skip, take } };
+    return { items: data, meta };
   }
 
   async findById(id: string) {

@@ -28,8 +28,10 @@ export class PrismaService
     },
     options: PaginationOptions & { where?: any; select?: any; orderBy?: any }
   ) {
-    const skipCount = (options.skip - 1) * options.take;
-    const take = Number(options.take);
+    const skip = Math.max(1, Number(options.skip) || 1);
+    const take = Math.max(1, Number(options.take) || 10);
+
+    const skipCount = (skip - 1) * take;
 
     const [total, items] = await this.$transaction(async () => {
       return Promise.all([
@@ -45,11 +47,14 @@ export class PrismaService
     });
 
     return {
-      total,
       items,
-      pages: Math.ceil(total / take),
-      skip: options.skip,
-      take,
+      meta: {
+        itemCount: items.length,
+        totalItems: total,
+        totalPages: Math.ceil(total / take),
+        currentPage: skip,
+        itemsPerPage: take,
+      }
     };
   }
 

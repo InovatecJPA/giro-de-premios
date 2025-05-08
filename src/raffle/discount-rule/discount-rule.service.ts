@@ -17,7 +17,7 @@ export class DiscountRuleService {
   async findAll(
     pagination: PaginationOptions,
   ) {
-    const { total, items, pages, skip, take } =
+    const { items, meta } =
       await this.prisma.paginate(this.prisma.discountRule, {
         ...pagination,
         select: {
@@ -32,7 +32,7 @@ export class DiscountRuleService {
       ResponseDiscountRuleSchema.parse(item),
     );
 
-    return { data, meta: { total, pages, skip, take } };
+    return { items: data, meta };
   }
 
   async findById(id: string) {

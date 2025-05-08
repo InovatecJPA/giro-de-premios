@@ -16,16 +16,16 @@ export class ExtractController {
         return this.extractService.findAll(paginationOptions);
     }
 
+    @Post()
+    deposit(@Body() dto: CreateDepositExtractDto) {
+        return this.extractService.deposit(new Decimal(dto.amount), dto.user_id, dto.ticket_payment_id);
+    }
+
     @Get(':id')
     findById(@Param('id') id: string) {
         const extract = this.extractService.findById(id);
 
         const extractResponse = ResponseDepositExtractSchema.parse(extract);
         return { data: { extractResponse } }
-    }
-
-    @Post()
-    deposit(@Body() dto: CreateDepositExtractDto) {
-        return this.extractService.deposit(new Decimal(dto.amount), dto.user_id, dto.ticket_payment_id);
     }
 }

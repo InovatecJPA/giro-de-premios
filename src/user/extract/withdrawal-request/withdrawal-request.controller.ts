@@ -13,6 +13,14 @@ export class WithdrawalRequestController {
         return await this.service.create(dto);
     }
 
+
+
+    @Get()
+    async findAll(@Query('page') skip = 1, @Query('limit') take = 10) {
+        const paginationOptions = { skip, take };
+        return await this.service.findAll(paginationOptions);
+    }
+
     @Get(':id')
     async findById(@Param('id') id: string) {
         const withdrawal = await this.service.findById(id);
@@ -20,12 +28,6 @@ export class WithdrawalRequestController {
         const data = ResponseDepositExtractSchema.parse(withdrawal);
 
         return { data }
-    }
-
-    @Get()
-    async findAll(@Query('page') skip = 1, @Query('limit') take = 10) {
-        const paginationOptions = { skip, take };
-        return await this.service.findAll(paginationOptions);
     }
 
     @HttpCode(204)

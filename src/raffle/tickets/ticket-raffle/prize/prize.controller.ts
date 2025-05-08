@@ -35,15 +35,7 @@ export class PrizeController {
     }
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string): Promise<any> {
-    try {
-      const prize = await this.prizeService.findById(id);
-      return { data: { prize } };
-    } catch (error) {
-      throw error;
-    }
-  }
+
 
   @Post()
   async create(@Body() data: CreatePrizeDto): Promise<any> {
@@ -52,6 +44,16 @@ export class PrizeController {
 
       const prizeResponse = ResponsePrizeSchema.parse(created);
       return { data: { prizeResponse } };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<any> {
+    try {
+      const prize = await this.prizeService.findById(id);
+      return { data: { prize } };
     } catch (error) {
       throw error;
     }

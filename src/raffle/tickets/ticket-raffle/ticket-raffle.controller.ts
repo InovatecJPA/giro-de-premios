@@ -30,19 +30,20 @@ export class TicketRaffleController {
     return { data: { result } };
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string) {
-    const raffle = await this.ticketRaffleService.findById(id);
-    return {
-      data: ResponseTicketRaffleSchema.parse(raffle),
-    };
-  }
 
   @Post()
   async create(@Body() dto: CreateTicketRaffleDto) {
     const created = await this.ticketRaffleService.create(dto);
     return {
       data: ResponseTicketRaffleSchema.parse(created),
+    };
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    const raffle = await this.ticketRaffleService.findById(id);
+    return {
+      data: ResponseTicketRaffleSchema.parse(raffle),
     };
   }
 

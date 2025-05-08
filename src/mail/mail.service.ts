@@ -23,16 +23,22 @@ export interface EmailOptions {
 @Injectable()
 export class MailService {
     private readonly logger = new Logger(MailService.name)
+    private readonly isTest = process.env.NODE_ENV === 'test'
 
     constructor(
-        private readonly mailService: MailerService
-    ) { }
+        private readonly mailerService: MailerService
+    ) {
+        this.isTest = process.env.NODE_ENV === 'test'
+    }
 
     async sendMail(
         options: EmailOptions
     ) {
         try {
-            this.mailService.sendMail({
+            if (this.isTest) {
+                return this.logger.log(`Skipping email send in test environment - would send to ${options.to}`);
+            }
+            this.mailerService.sendMail({
                 to: options.to,
                 subject: options.subject,
                 template: options.template,

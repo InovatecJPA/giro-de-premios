@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ResponseUserDTO, ResponseUserSchema } from './dto/response-user.dto';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -7,6 +7,7 @@ import { PutUpdateUser } from './dto/put-update-user.dto';
 
 import { plainToInstance } from 'class-transformer';
 import { IsPublic } from '../decorators/is-public-validator.decorator';
+import { NotFoundError } from 'rxjs';
 
 @Controller('users')
 export default class UserController {
@@ -25,18 +26,7 @@ export default class UserController {
 
       const users = await this.userService.findAll(pagination);
 
-      return { data: { users } }
-    } catch (error) {
-      throw error
-    }
-  }
-
-  @Get(':id')
-  async findById(@Param('id') id: string) {
-    try {
-      const users = await this.userService.findById(id);
-
-      return { data: { users } }
+      return { data: users }
     } catch (error) {
       throw error
     }
@@ -55,6 +45,20 @@ export default class UserController {
     }
   }
 
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    try {
+      const users = await this.userService.findById(id);
+
+      if (!users) {
+        throw new NotFoundException('Usuario nao encontrado')
+      }
+
+      return { data: { users } }
+    } catch (error) {
+      throw error
+    }
+  }
 
   @Patch(':id')
   async updatePatch(@Param('id') id: string, @Body() data: PatchUpdateUser) {

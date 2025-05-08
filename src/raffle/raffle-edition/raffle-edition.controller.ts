@@ -11,11 +11,9 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { RaffleEditionService } from './raffle-edition.service';
-import { CreateRaffleEditionDto } from './dto/create-raffle-edition.dto';
 import { PatchUpdateRaffleEditionDto } from './dto/patch-update-raffle-edition.dto';
 import { PutUpdateRaffleEditionDto } from './dto/put-update-raffle-edition.dto';
-import { ResponseRaffleEditionDto, ResponseRaffleEditionSchema } from './dto/response-raffle-edition.dto';
-import { plainToInstance } from 'class-transformer';
+import { ResponseRaffleEditionSchema } from './dto/response-raffle-edition.dto';
 import { CreateBodyRaffleEditionDto } from './dto/create-raffle-edition-body.dto';
 import { PatchAddFinalPrizeDto } from './dto/patch-add-final-prize.dto';
 
@@ -37,15 +35,7 @@ export class RaffleEditionController {
     }
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string) {
-    try {
-      const raffleEditions = await this.raffleEditionService.findById(id);
-      return { data: { raffleEditions } };
-    } catch (error) {
-      throw error;
-    }
-  }
+
 
   @Post()
   async create(
@@ -60,6 +50,16 @@ export class RaffleEditionController {
       const raffleEditionResponse = ResponseRaffleEditionSchema.parse(raffleEdition)
 
       return { data: { raffleEditionResponse } };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    try {
+      const raffleEditions = await this.raffleEditionService.findById(id);
+      return { data: { raffleEditions } };
     } catch (error) {
       throw error;
     }

@@ -14,7 +14,7 @@ export default class ForgotPasswordService {
     ) { }
 
     async findAll(paginationOptions: PaginationOptions) {
-        const { items, pages, skip, take, total } = await this.prisma.paginate(
+        const { items, meta } = await this.prisma.paginate(
             this.prisma.forgotPasswordToken,
             {
                 ...paginationOptions,
@@ -31,8 +31,8 @@ export default class ForgotPasswordService {
         const data = items.map((item) => ResponseForgotPasswordSchema.parse(item))
 
         return {
-            data,
-            meta: { total, pages, skip, take },
+            items: data,
+            meta,
         }
     }
 

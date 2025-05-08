@@ -19,7 +19,7 @@ export class RaffleEditionService {
     ) { }
 
     async findAll(pagination: PaginationOptions) {
-        const { items, pages, skip, take, total } = await this.prisma.paginate(
+        const { items, meta } = await this.prisma.paginate(
             this.prisma.raffleEdition,
             {
                 ...pagination,
@@ -35,7 +35,7 @@ export class RaffleEditionService {
 
         const data = items.map((item) => ResponseRaffleEditionSchema.parse(item));
 
-        return { data, meta: { total, pages, skip, take } };
+        return { items: data, meta };
     }
 
     async findById(id: string) {

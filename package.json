@@ -24,6 +24,7 @@
     "@bull-board/express": "^6.9.2",
     "@bull-board/nestjs": "^6.9.2",
     "@bull-board/ui": "^6.9.2",
+    "@css-inline/css-inline": "^0.14.3",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/bull": "^11.0.2",
     "@nestjs/bull-shared": "^11.0.2",

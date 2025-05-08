@@ -9,5 +9,6 @@
   "modulePathIgnorePatterns": [
     "<rootDir>/dist"
   ],
-  "setupFilesAfterEnv": ["<rootDir>/test/setup-e2e.ts"]
+  "setupFilesAfterEnv": ["<rootDir>/test/setup-e2e.ts"],
+  "forceExit": true
 }

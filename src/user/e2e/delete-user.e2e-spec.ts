@@ -1,12 +1,12 @@
 import { app } from "../../../test/setup-e2e";
-import { defaultUser } from "../../../test/utils/user-test-helper";
+import { defaultUserLocal } from "../../../test/utils/user-test-helper";
 import request from 'supertest'
 
 describe('[DELETE] UserController (e2e)', () => {
     test('/users/:id - should delete a user', async () => {
         const createUserResponse = await request(app.getHttpServer())
             .post('/users')
-            .send(defaultUser);
+            .send(defaultUserLocal);
 
         const userId = createUserResponse.body.data.userResponse.id;
 

@@ -16,7 +16,7 @@ export class ExtractService {
     ) { }
 
     async findAll(paginationOptions: PaginationOptions) {
-        const { items, pages, skip, take, total } = await this.prisma.paginate(
+        const { items, meta } = await this.prisma.paginate(
             this.prisma.extract,
             {
                 ...paginationOptions,
@@ -27,8 +27,8 @@ export class ExtractService {
         const data = items.map((item) => ResponseDepositExtractSchema.parse(item))
 
         return {
-            data: data,
-            meta: { total, pages, skip, take },
+            items: data,
+            meta,
         };
     }
 

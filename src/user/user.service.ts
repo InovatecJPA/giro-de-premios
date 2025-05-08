@@ -5,11 +5,10 @@ import {
 } from '@nestjs/common';
 import { PutUpdateUser } from './dto/put-update-user.dto';
 import { PatchUpdateUser } from './dto/patch-update-user.dto';
-import { ResponseUserDTO, ResponseUserSchema } from './dto/response-user.dto';
+import { ResponseUserSchema } from './dto/response-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClient, User } from 'src/prisma/generated/prisma/client';
 import { PaginationOptions } from '../utils/types/pagination.types';
-import { plainToInstance } from 'class-transformer';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { AuthService } from '../auth/auth.service';
 
@@ -21,19 +20,18 @@ export class UserService {
   ) { }
 
   async findAll(paginationOptions: PaginationOptions) {
-    let { total, items, pages, skip, take } = await this.prisma.paginate(
+    let { items, meta } = await this.prisma.paginate(
       this.prisma.user,
       {
         ...paginationOptions,
-
       }
     );
 
     const data = items.map(item => ResponseUserSchema.parse(item));
 
     return {
-      data,
-      meta: { total, pages, skip, take }
+      items: data,
+      meta
     };
   }
 

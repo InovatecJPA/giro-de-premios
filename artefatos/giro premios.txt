@@ -1,8 +1,4 @@
-Faltando recuperar senha
-
 Verificar login com google
-
-Criar templates de email
 
 Implementar testes de integração
 --------------------------------------------

@@ -16,7 +16,7 @@ export class WinnerPaymentService {
     }
 
     async findAll(paginationOptions: PaginationOptions) {
-        const { items, pages, skip, take, total } = await this.prisma.paginate(
+        const { items, meta } = await this.prisma.paginate(
             this.prisma.winnerPayment,
             {
                 ...paginationOptions,
@@ -33,8 +33,8 @@ export class WinnerPaymentService {
         const data = items.map((item) => ResponseWinnerPaymentSchema.parse(item));
 
         return {
-            data,
-            meta: { total, pages, skip, take },
+            items: data,
+            meta,
         }
     }
 

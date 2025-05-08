@@ -15,7 +15,7 @@ export type UserTest = {
   }
 };
 
-export const defaultUser: UserTest = {
+export const defaultUserLocal: UserTest = {
   name: 'Default User',
   cpf: '11111111111',
   number: '83991758296',
@@ -23,7 +23,7 @@ export const defaultUser: UserTest = {
   comissao: '0.10',
   credentials: {
     provider: 'email',
-    provider_user_id: 'xrztyiqvvbrrrswuel@hthlm.com',
+    provider_user_id: 'teste@example.com',
     password: 'Inova@123',
   }
 };
@@ -36,7 +36,7 @@ export const defaultOwner: UserTest = {
   social_media: null,
   credentials: {
     provider: 'email',
-    provider_user_id: 'fariy85918@firain.com',
+    provider_user_id: 'testeowner@example.com',
     password: 'Inova@123',
   }
 };

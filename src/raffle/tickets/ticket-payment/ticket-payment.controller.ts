@@ -20,15 +20,6 @@ export class TicketPaymentController {
         return await this.ticketPaymentService.findAll(paginationOptions);
     }
 
-    @Get(':id')
-    async findById(@Param('id') id: string) {
-        const ticketPayment = await this.ticketPaymentService.findById(id);
-
-        const ticketPaymentResponse = ResponseTicketPaymentSchema.parse(ticketPayment);
-
-        return { data: { ticketPaymentResponse } }
-    }
-
     @Post('buy-tickets')
     async buyTickets(@Body() buyingTicketsData: BuyingTicketsDto) {
         const ticketPayment = await this.ticketPaymentService.buyTickets(buyingTicketsData);
@@ -52,4 +43,14 @@ export class TicketPaymentController {
     async countSoldTickets(@Param('raffle_edition_id') raffle_edition_id: string) {
         return await this.ticketPaymentService.countSoldTickets(raffle_edition_id);
     }
+
+    @Get(':id')
+    async findById(@Param('id') id: string) {
+        const ticketPayment = await this.ticketPaymentService.findById(id);
+
+        const ticketPaymentResponse = ResponseTicketPaymentSchema.parse(ticketPayment);
+
+        return { data: { ticketPaymentResponse } }
+    }
+
 }

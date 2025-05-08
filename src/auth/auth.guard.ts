@@ -8,7 +8,6 @@ import { IS_PUBLIC_KEY } from "../decorators/is-public-validator.decorator";
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
-        private jwtService: JwtService,
         private authService: AuthService,
         private reflector: Reflector
     ) { }

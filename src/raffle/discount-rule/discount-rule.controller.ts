@@ -30,16 +30,19 @@ export class DiscountRuleController {
     return { data: { response } };
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string) {
-    const rule = await this.service.findById(id);
-    return { data: ResponseDiscountRuleSchema.parse(rule) };
-  }
+
 
   @Post()
   async create(@Body() dto: CreateDiscountRuleDto) {
     const created = await this.service.create(dto);
     return { data: ResponseDiscountRuleSchema.parse(created) };
+  }
+
+
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    const rule = await this.service.findById(id);
+    return { data: ResponseDiscountRuleSchema.parse(rule) };
   }
 
   @Patch(':id')
