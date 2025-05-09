@@ -1,5 +1,7 @@
 Verificar login com google
 
+Fazer logica com base na url para identificar o influencer
+
 Implementar testes de integração
 --------------------------------------------
 

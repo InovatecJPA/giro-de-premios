@@ -10,13 +10,14 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
 import { DiscountRuleService } from './discount-rule.service';
 import { CreateDiscountRuleDto } from './dto/create-discount-rule.dto';
 import { PatchUpdateDiscountRuleDto } from './dto/patch-update-discount-rule.dto';
 import { PutUpdateDiscountRuleDto } from './dto/put-update-discount-rule.dto';
 import { ResponseDiscountRuleDto, ResponseDiscountRuleSchema } from './dto/response-discount-rule.dto';
+import { Roles } from '../../decorators/roles-and-permissions.decorator';
 
+@Roles('admin')
 @Controller('discount-rules')
 export class DiscountRuleController {
   constructor(private readonly service: DiscountRuleService) { }

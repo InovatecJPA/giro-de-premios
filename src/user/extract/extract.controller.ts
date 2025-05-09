@@ -1,26 +1,24 @@
 
 import { Controller, Get, Param, Post, Body, Query } from '@nestjs/common';
 import { ExtractService } from './extract.service';
-import { CreateDepositExtractDto } from './dto/create-deposit-extract.dto';
-import { ResponseDepositExtractDto, ResponseDepositExtractSchema } from './dto/response-deposit-extract.dto';
-import { plainToInstance } from 'class-transformer';
-import { Decimal } from '@prisma/client/runtime/library';
+import { ResponseDepositExtractSchema } from './dto/response-deposit-extract.dto';
+import { Permissions, Roles } from '../../decorators/roles-and-permissions.decorator';
 
+@Roles('admin', 'suporte', 'influencer')
+// @Permissions('extract')
 @Controller('extract')
 export class ExtractController {
     constructor(private readonly extractService: ExtractService) { }
 
+    @Roles('admin')
     @Get()
     findAll(@Query('page') skip = 1, @Query('limit') take = 10) {
         const paginationOptions = { skip, take };
         return this.extractService.findAll(paginationOptions);
     }
 
-    @Post()
-    deposit(@Body() dto: CreateDepositExtractDto) {
-        return this.extractService.deposit(new Decimal(dto.amount), dto.user_id, dto.ticket_payment_id);
-    }
 
+    @Roles('admin')
     @Get(':id')
     findById(@Param('id') id: string) {
         const extract = this.extractService.findById(id);

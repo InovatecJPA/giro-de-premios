@@ -49,3 +49,8 @@ Content-Type: application/json
   "email": "teste@example.com",
   "password": "Inova@123"
 }
+###
+GET http://localhost:3000/auth/
+
+###
+GET http://localhost:3000/auth/23da3a0b-e4b0-454f-9227-adfa19419044

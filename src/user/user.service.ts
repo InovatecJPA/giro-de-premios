@@ -68,6 +68,16 @@ export class UserService {
     return user;
   }
 
+  async findBySocialMedia(social_media: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        social_media,
+      },
+    });
+
+    return user;
+  }
+
   async create(data: CreateUserDTO) {
     const { credentials, ...userData } = data;
 

@@ -41,6 +41,29 @@ export class TicketPaymentService {
         }
     }
 
+    async findAllByUserId(user_id: string, paginationOptions: PaginationOptions) {
+        const { items, meta } = await this.prisma.paginate(
+            this.prisma.ticketPayment,
+            {
+                where: { user_id },
+                ...paginationOptions,
+                select: {
+                    id: true,
+                    discount: true,
+                    total_value: true,
+                    created_at: true,
+                },
+            }
+        )
+
+        const data = items.map((item) => ResponseTicketPaymentSchema.parse(item))
+
+        return {
+            items: data,
+            meta,
+        }
+    }
+
     async findById(id: string) {
         return this.prisma.ticketPayment.findUnique({
             where: { id },

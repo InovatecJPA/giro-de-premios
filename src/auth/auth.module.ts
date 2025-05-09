@@ -5,9 +5,11 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth.guard';
 import { MailModule } from '../mail/mail.module';
 import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
+import { SelfOnlyGuard } from '../guards/self-only.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Module({
   imports: [
@@ -22,10 +24,18 @@ import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
   ],
   providers: [
     AuthService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: SelfOnlyGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    }
   ],
   controllers: [AuthController],
   exports: [AuthService],

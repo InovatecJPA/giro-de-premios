@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsPhoneNumber, IsString, IsUUID, Matches, Min } from "class-validator";
+import { IsEmail, IsNumber, IsOptional, IsPhoneNumber, IsString, IsUUID, Matches, Min } from "class-validator";
 
 export class BuyingTicketsDto {
 
@@ -21,4 +21,8 @@ export class BuyingTicketsDto {
 
     @IsUUID('4')
     raffle_edition_id: string
+
+    @IsOptional()
+    @IsUUID('4')
+    user_id?: string
 }

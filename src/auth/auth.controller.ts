@@ -4,6 +4,8 @@ import { AuthLoginDto } from "./dto/auth-login.dto";
 import { IsPublic } from "../decorators/is-public-validator.decorator";
 import { AuthResponseSchema } from "./dto/auth-response.dto";
 import { AuthResetDto } from "./dto/auth-reset.dto";
+import { CurrentUser } from "../decorators/get-current-user.decorator";
+import { SelfOnly } from "../decorators/self-only.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -26,10 +28,11 @@ export class AuthController {
 
 
 
-    @Get('user/:userId')
-    async findByUserId(@Param('userId') userId: string, @Query('page') skip = 1, @Query('limit') take = 10) {
+    @SelfOnly()
+    @Get('user/:id')
+    async findByUserId(@Param('id') id: string, @Query('page') skip = 1, @Query('limit') take = 10) {
         const pagination = { skip, take };
-        const authUser = await this.authService.findByUserId(userId, pagination);
+        const authUser = await this.authService.findByUserId(id, pagination);
 
         if (authUser.items.length === 0) {
             throw new NotFoundException('Auth para o usuário não encontrado')
@@ -76,7 +79,7 @@ export class AuthController {
 
     @HttpCode(204)
     @Patch('reset-password')
-    async resetPassword(@Param('id') id: string, @Body() data: AuthResetDto) {
+    async resetPassword(@CurrentUser('id') id: string, @Body() data: AuthResetDto) {
         const { old_password, new_password } = data
 
         await this.authService.resetPassword(id, old_password, new_password);

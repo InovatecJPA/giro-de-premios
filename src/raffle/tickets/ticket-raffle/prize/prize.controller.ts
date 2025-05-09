@@ -14,9 +14,11 @@ import { PrizeService } from './prize.service';
 import { CreatePrizeDto } from './dto/create-prize.dto';
 import { PatchUpdatePrizeDto } from './dto/patch-update-prize.dto';
 import { PutUpdatePrizeDto } from './dto/put-update-prize.dto';
-import { ResponsePrizeDto, ResponsePrizeSchema } from './dto/response-prize.dto';
-import { plainToInstance } from 'class-transformer';
+import { ResponsePrizeSchema } from './dto/response-prize.dto';
+import { Roles } from '../../../../decorators/roles-and-permissions.decorator';
 
+
+@Roles('admin', 'suporte', 'influencer')
 @Controller('prizes')
 export class PrizeController {
   constructor(private readonly prizeService: PrizeService) { }
@@ -59,35 +61,35 @@ export class PrizeController {
     }
   }
 
-  @Patch(':id')
-  async updatePatch(
-    @Param('id') id: string,
-    @Body() data: PatchUpdatePrizeDto,
-  ): Promise<any> {
-    try {
-      const updated = await this.prizeService.update(id, data);
+  // @Patch(':id')
+  // async updatePatch(
+  //   @Param('id') id: string,
+  //   @Body() data: PatchUpdatePrizeDto,
+  // ): Promise<any> {
+  //   try {
+  //     const updated = await this.prizeService.update(id, data);
 
-      const prizeResponse = ResponsePrizeSchema.parse(updated);
-      return { data: { prizeResponse } };
-    } catch (error) {
-      throw error;
-    }
-  }
+  //     const prizeResponse = ResponsePrizeSchema.parse(updated);
+  //     return { data: { prizeResponse } };
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
-  @Put(':id')
-  async updatePut(
-    @Param('id') id: string,
-    @Body() data: PutUpdatePrizeDto,
-  ): Promise<any> {
-    try {
-      const updated = await this.prizeService.update(id, data);
+  // @Put(':id')
+  // async updatePut(
+  //   @Param('id') id: string,
+  //   @Body() data: PutUpdatePrizeDto,
+  // ): Promise<any> {
+  //   try {
+  //     const updated = await this.prizeService.update(id, data);
 
-      const prizeResponse = ResponsePrizeSchema.parse(updated);
-      return { data: { prizeResponse } };
-    } catch (error) {
-      throw error;
-    }
-  }
+  //     const prizeResponse = ResponsePrizeSchema.parse(updated);
+  //     return { data: { prizeResponse } };
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   @Delete(':id')
   @HttpCode(204)

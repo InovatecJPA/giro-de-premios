@@ -18,11 +18,13 @@ import { EmailOptions, MailService } from '../mail/mail.service';
 import { randomBytes } from 'crypto';
 import ForgotPasswordService from './forgot-password/forgot-password.service';
 import { Cron } from '@nestjs/schedule';
+import { permission } from 'process';
 
 export type JwtAuthPayload = {
   sub: string;
   profile: Profiles;
   isVerified: boolean;
+  permissions: string[]
 };
 
 @Injectable()
@@ -106,11 +108,12 @@ export class AuthService {
     return await this.prisma.auth.delete({ where: { id } });
   }
 
-  createToken(user: User, isVerified: boolean) {
+  createToken(user: User, isVerified: boolean, permissions?: string[]) {
     const payload: JwtAuthPayload = {
       sub: user.id,
       profile: user.profile,
       isVerified,
+      permissions: permissions || [],
     };
 
     return {
@@ -189,6 +192,11 @@ export class AuthService {
 
   async registerSocial(data: AuthRegisterDto, prisma?: PrismaClient) {
     const db = prisma || this.prisma;
+    let permissions: string[] = [];
+
+    // user = findUser(data.user_id)
+    // permissions = findPermissions(user.profiles)
+
 
     const authExists = await this.findByProviderAndProviderUserId(
       data.provider_user_id,
@@ -196,7 +204,7 @@ export class AuthService {
     );
 
     if (authExists) {
-      return this.createToken(authExists.User, authExists.is_verified);
+      return this.createToken(authExists.User, authExists.is_verified, permissions);
     }
 
     const emailExists = await this.findByEmail(data.provider_user_id);
@@ -257,11 +265,12 @@ export class AuthService {
   }
 
   async login(data: AuthLoginDto) {
+    let permissions: string[] = [];
+
     const auth = await this.findByProviderAndProviderUserId(
       data.provider_user_id,
       data.provider,
     )
-
 
     if (!auth) {
       throw new UnauthorizedException('Credenciais inválidas');
@@ -272,7 +281,10 @@ export class AuthService {
         throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    return this.createToken(auth.User, auth.is_verified);
+
+    // permissions = findPermissions(auth.User.profile)
+
+    return this.createToken(auth.User, auth.is_verified, permissions);
   }
 
   async isPasswordValid(auth: Auth, password: string) {

@@ -2,8 +2,10 @@ import { Controller, Post, Get, Param, Body, Patch, Query, HttpCode } from '@nes
 import { WithdrawalRequestService } from './withdrawal-request.service';
 import { CreateWithdrawalRequestDTO } from './dto/create-withdrawal-request.dto';
 import { ResponseDepositExtractDto, ResponseDepositExtractSchema } from '../dto/response-deposit-extract.dto';
-import { plainToInstance } from 'class-transformer';
+import { Permissions, Roles } from '../../../decorators/roles-and-permissions.decorator';
 
+@Roles('admin', 'suporte', 'influencer')
+// @Permissions('withdrawal_request')
 @Controller('withdrawal-requests')
 export class WithdrawalRequestController {
     constructor(private readonly service: WithdrawalRequestService) { }
@@ -12,8 +14,6 @@ export class WithdrawalRequestController {
     async create(@Body() dto: CreateWithdrawalRequestDTO) {
         return await this.service.create(dto);
     }
-
-
 
     @Get()
     async findAll(@Query('page') skip = 1, @Query('limit') take = 10) {

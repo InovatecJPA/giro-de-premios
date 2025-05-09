@@ -1,8 +1,9 @@
 import { Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
 import ForgotPasswordService from "./forgot-password.service";
-import { plainToInstance } from "class-transformer";
 import { ResponseForgotPasswordSchema } from "./dto/response-forgot-password.dto";
+import { Roles } from "../../decorators/roles-and-permissions.decorator";
 
+@Roles('admin')
 @Controller('forgot-password')
 export default class ForgotPasswordController {
     constructor(
